@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>欧洲多国旅行计划 · 2026.6.29 - 7.17</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> · 2026.6.29 - 7.17</title>
 <style>
   :root {
     --bg: #f5f3ef;
@@ -112,7 +114,18 @@
   .stat .num-big { font-size: 32px; font-weight: 800; color: var(--accent2); }
   .stat .label { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
-  /* Map placeholder */
+  /* Map */
+  #route-map { height: 420px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; z-index: 1; }
+  .map-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; margin-top: 8px; color: var(--muted); }
+  .map-legend span { display: flex; align-items: center; gap: 4px; }
+  .map-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .map-legend .dot.city { background: var(--accent2); }
+  .map-legend .dot.fly { background: #1a56db; }
+  .map-legend .dot.rail { background: #d97706; }
+  .map-legend .line { width: 20px; height: 2px; display: inline-block; }
+  .map-legend .line.fly { background: #1a56db; border: none; }
+  .map-legend .line.rail { background: #d97706; border: none; }
+
   .route-flow {
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
     font-size: 14px; font-weight: 600; padding: 16px 0; overflow-x: auto;
@@ -197,8 +210,16 @@
 <!-- ========== ROUTE ========== -->
 <section id="route">
   <h2>路线总览</h2>
-  <div class="card">
+  <div id="route-map"></div>
+  <div class="map-legend">
+    <span><span class="dot city"></span> 停留城市</span>
+    <span><span class="line fly"></span> 航班</span>
+    <span><span class="line rail"></span> 火车</span>
+  </div>
+  <div class="card" style="margin-top:16px;">
     <div class="route-flow">
+      <div class="route-node" style="border:1px dashed #9333ea;">🇮🇹 米兰(备选)<span class="route-nights">省钱入境</span></div>
+      <span class="route-arrow" style="color:#9333ea;">⇢</span>
       <div class="route-node">🇮🇹 罗马<span class="route-nights">4晚</span></div>
       <span class="route-arrow">→</span>
       <div class="route-node">🇮🇹 佛罗伦萨<span class="route-nights">3晚</span></div>
@@ -217,6 +238,20 @@
       <span class="tag transport">尼斯→巴塞罗那 廉航1.2h</span>
       <span class="tag transport">巴塞罗那→巴黎 廉航2h</span>
       <span class="tag transport">巴黎→卢塞恩 高铁4.5h</span>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid #9333ea;">
+    <h3>💰 省钱备选：米兰入境 vs 罗马入境</h3>
+    <table>
+      <tr><th></th><th>米兰 MXP/BGY</th><th>罗马 FCO</th></tr>
+      <tr><td>中国飞抵票价</td><td>约 ¥3,200-4,000</td><td>约 ¥3,800-4,500</td></tr>
+      <tr><td>5人可省</td><td colspan="2" style="color:#2e7d32;font-weight:700;">约 ¥5,000-7,500</td></tr>
+      <tr><td>到罗马的额外时间</td><td>高铁 3h（€55）</td><td>—</td></tr>
+      <tr><td>适合情况</td><td colspan="2">差价 > ¥500/人时值得考虑，米兰先住1晚休整再南下罗马</td></tr>
+    </table>
+    <div class="tip" style="margin-top:12px;">
+      <strong>🚗 米兰开车去瑞士卢塞恩：</strong>约 2.5h（240km），全程高速，穿越阿尔卑斯山麓景色壮丽。租车一天约 €60-100 + 油费 €40。但需确认租车公司允许跨境（意大利→瑞士），瑞士高速需购买通行贴纸（CHF 40/年）。对老人团来说，火车更省心（2.5h 直达，€55）。
     </div>
   </div>
 
@@ -506,7 +541,9 @@
     <table>
       <tr><th>航线</th><th class="num">估算(¥)</th><th class="num">人数</th><th class="num">小计(¥)</th></tr>
       <tr><td>深圳 SZX → 罗马 FCO</td><td class="num">4,500</td><td class="num">3</td><td class="num">13,500</td></tr>
+      <tr><td>　↳ 或 深圳 → 米兰 MXP（省¥800/人）</td><td class="num">3,700</td><td class="num">3</td><td class="num">11,100</td></tr>
       <tr><td>上海 PVG → 罗马 FCO</td><td class="num">3,800</td><td class="num">2</td><td class="num">7,600</td></tr>
+      <tr><td>　↳ 或 上海 → 米兰 MXP（省¥600/人）</td><td class="num">3,200</td><td class="num">2</td><td class="num">6,400</td></tr>
       <tr><td>斯德哥尔摩 ARN → 罗马 FCO</td><td class="num">1,000</td><td class="num">2</td><td class="num">2,000</td></tr>
       <tr><td>苏黎世 ZRH → 斯德哥尔摩 ARN</td><td class="num">1,200</td><td class="num">7</td><td class="num">8,400</td></tr>
       <tr><td>苏黎世 ZRH → 深圳/新加坡</td><td class="num">4,500</td><td class="num">1</td><td class="num">4,500</td></tr>
@@ -643,7 +680,66 @@
 </div>
 
 <script>
-// Active nav
+// ===== Leaflet Route Map =====
+(function() {
+  var map = L.map('route-map', { scrollWheelZoom: false }).setView([46.2, 7.5], 5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  var cities = {
+    stockholm:  { lat: 59.3293, lng: 18.0686, label: '斯德哥尔摩', icon: 'start' },
+    rome:      { lat: 41.9028, lng: 12.4964, label: '罗马 (集合)', icon: 'start' },
+    florence:  { lat: 43.7696, lng: 11.2558, label: '佛罗伦萨', icon: 'city' },
+    pisa:      { lat: 43.7228, lng: 10.3966, label: '比萨', icon: 'side' },
+    nice:      { lat: 43.7102, lng: 7.2620,  label: '尼斯', icon: 'city' },
+    monaco:    { lat: 43.7384, lng: 7.4246,  label: '摩纳哥', icon: 'side' },
+    barcelona: { lat: 41.3874, lng: 2.1686,  label: '巴塞罗那', icon: 'city' },
+    paris:     { lat: 48.8566, lng: 2.3522,  label: '巴黎', icon: 'city' },
+    lucerne:   { lat: 47.0502, lng: 8.3093,  label: '卢塞恩 (解散)', icon: 'end' },
+    zurich:    { lat: 47.3769, lng: 8.5417,  label: '苏黎世', icon: 'end' },
+    milan:     { lat: 45.4642, lng: 9.1900,  label: '米兰 (备选入境)', icon: 'alt' }
+  };
+
+  var colors = { fly: '#1a56db', rail: '#d97706', drive: '#7c3aed' };
+
+  function iconHtml(icon) {
+    var mapIcon = { start: '#2e5c4e', city: '#2e5c4e', end: '#b8860b', side: '#6b5e4a', alt: '#9333ea' };
+    var c = mapIcon[icon] || '#2e5c4e';
+    return '<div style="background:'+c+';width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>';
+  }
+
+  Object.keys(cities).forEach(function(k) {
+    var c = cities[k];
+    var m = L.marker([c.lat, c.lng], { icon: L.divIcon({ html: iconHtml(c.icon), className: '', iconSize: [14,14], iconAnchor: [7,7] }) }).addTo(map);
+    m.bindTooltip(c.label, { direction: 'top', offset: [0, -8], className: 'map-tooltip' });
+  });
+
+  // Routes: [from, to, type]
+  var routes = [
+    ['rome','florence','rail'],
+    ['florence','pisa','rail'], ['pisa','florence','rail'],
+    ['florence','nice','fly'],
+    ['nice','monaco','rail'], ['monaco','nice','rail'],
+    ['nice','barcelona','fly'],
+    ['barcelona','paris','fly'],
+    ['paris','lucerne','rail'],
+    ['lucerne','zurich','rail'],
+    ['stockholm','rome','fly'],
+    ['stockholm','zurich','fly'],
+    ['milan','lucerne','drive']
+  ];
+
+  routes.forEach(function(r) {
+    var f = cities[r[0]], t = cities[r[1]];
+    if (!f || !t) return;
+    var style = { color: colors[r[2]] || '#1a56db', weight: r[2]==='fly'?2:3, opacity: 0.7, dashArray: r[2]==='fly'?'6 6':null };
+    L.polyline([[f.lat,f.lng],[t.lat,t.lng]], style).addTo(map);
+  });
+})();
+
+// ===== Nav =====
 document.querySelectorAll('nav a').forEach(a => {
   a.addEventListener('click', function() {
     document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
