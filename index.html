@@ -3,283 +3,227 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>欧洲多国旅行计划 · 2026.6.29 - 7.17</title>
+<title>欧洲旅行计划 · 2026.6.29 - 7.17</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
-    --bg: #f5f3ef;
-    --card: #fff;
-    --text: #2c2416;
-    --muted: #6b5e4a;
-    --accent: #b8860b;
-    --accent2: #2e5c4e;
-    --border: #e0d9cc;
-    --tag-bg: #f0ebe0;
-    --highlight: #fdf6e3;
+    --bg: #f5f3ef; --card: #fff; --text: #2c2416; --muted: #6b5e4a;
+    --accent: #b8860b; --accent2: #2e5c4e; --border: #e0d9cc;
+    --tag-bg: #f0ebe0; --highlight: #fdf6e3;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.7;
-  }
-
-  /* Nav */
+  body { font-family: -apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
   nav {
-    position: sticky; top:0; z-index:100;
-    background: rgba(245,243,239,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display: flex; gap: 24px; overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    position:sticky; top:0; z-index:100; backdrop-filter:blur(12px);
+    background:rgba(245,243,239,0.92); border-bottom:1px solid var(--border);
+    padding:0 24px; display:flex; gap:24px; overflow-x:auto;
   }
-  nav a {
-    text-decoration: none; color: var(--muted);
-    font-size: 14px; font-weight: 500;
-    padding: 12px 4px; white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    transition: .15s;
+  nav a { text-decoration:none; color:var(--muted); font-size:14px; font-weight:500; padding:12px 4px; white-space:nowrap; border-bottom:2px solid transparent; transition:.15s; }
+  nav a:hover, nav a.active { color:var(--accent); border-color:var(--accent); }
+  .container { max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  section { margin-bottom:56px; }
+  h1 { font-size:28px; font-weight:700; }
+  h2 { font-size:20px; font-weight:700; margin-bottom:20px; color:var(--accent2); }
+  h3 { font-size:16px; font-weight:600; margin-bottom:6px; }
+  .subtitle { color:var(--muted); font-size:15px; margin-top:4px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:16px; }
+  .card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.05); }
+  .tl { position:relative; padding-left:40px; }
+  .tl::before { content:''; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:var(--border); }
+  .tl-item { position:relative; margin-bottom:24px; }
+  .tl-dot { position:absolute; left:-31px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); }
+  .tl-date { font-size:13px; color:var(--accent); font-weight:600; margin-bottom:2px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .tag { font-size:12px; padding:2px 10px; border-radius:20px; background:var(--tag-bg); color:var(--muted); }
+  .tag.transport { background:#e3f0fd; color:#1a56db; }
+  .tag.highlight { background:#fef3c7; color:#92400e; }
+  .tag.rest { background:#e8f5e9; color:#2e7d32; }
+  .tag.free { background:#e8f5e9; color:#2e7d32; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; padding:8px 12px; border-bottom:2px solid var(--border); }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr.subtotal td { font-weight:700; border-top:2px solid var(--accent); background:var(--highlight); }
+  tr.total td { font-weight:700; font-size:16px; color:var(--accent2); background:var(--highlight); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
+  .stat { text-align:center; padding:20px; }
+  .stat .num-big { font-size:32px; font-weight:800; color:var(--accent2); }
+  .stat .label { font-size:13px; color:var(--muted); margin-top:4px; }
+  #route-map { height:440px; border-radius:12px; border:1px solid var(--border); margin-bottom:16px; z-index:1; }
+  .map-legend { display:flex; flex-wrap:wrap; gap:16px; font-size:13px; margin-top:8px; color:var(--muted); }
+  .map-legend span { display:flex; align-items:center; gap:4px; }
+  .map-legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .map-legend .dot.city { background:var(--accent2); }
+  .map-legend .dot.fly { background:#1a56db; }
+  .map-legend .dot.rail { background:#d97706; }
+  .map-legend .line { width:20px; height:2px; display:inline-block; }
+  .map-legend .line.fly { background:#1a56db; }
+  .map-legend .line.rail { background:#d97706; }
+  .route-flow { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:14px; font-weight:600; padding:16px 0; overflow-x:auto; }
+  .route-node { padding:6px 14px; border-radius:8px; white-space:nowrap; background:var(--card); border:1px solid var(--border); }
+  .route-arrow { color:var(--accent); font-size:18px; }
+  .route-nights { font-size:11px; color:var(--muted); display:block; }
+  .tip { background:#fef9e7; border-left:3px solid var(--accent); padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .warn { background:#fff5f5; border-left:3px solid #dc2626; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .good { background:#f0fdf4; border-left:3px solid #16a34a; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .compare td:first-child { font-weight:600; white-space:nowrap; }
+  .best { background:#fef3c7; font-weight:600; }
+  @media (max-width:640px) {
+    .container { padding:20px 12px 60px; }
+    h1 { font-size:22px; }
+    .grid { grid-template-columns:repeat(2,1fr); }
+    table { font-size:12px; }
+    td, th { padding:6px 8px; }
   }
-  nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); }
-
-  /* Layout */
-  .container { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
-  section { margin-bottom: 56px; }
-
-  h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.3px; }
-  h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--accent2); }
-  h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-  .subtitle { color: var(--muted); font-size: 15px; margin-top: 4px; }
-
-  /* Cards */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px 24px;
-    margin-bottom: 16px;
-  }
-  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
-
-  /* Timeline */
-  .tl { position: relative; padding-left: 40px; }
-  .tl::before {
-    content: ''; position: absolute; left: 15px; top: 8px; bottom: 8px;
-    width: 2px; background: var(--border);
-  }
-  .tl-item { position: relative; margin-bottom: 24px; }
-  .tl-dot {
-    position: absolute; left: -31px; top: 6px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); border: 3px solid var(--bg);
-  }
-  .tl-date {
-    font-size: 13px; color: var(--accent); font-weight: 600;
-    letter-spacing: 0.5px; margin-bottom: 2px;
-  }
-
-  /* Tags */
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tag {
-    font-size: 12px; padding: 2px 10px; border-radius: 20px;
-    background: var(--tag-bg); color: var(--muted);
-  }
-  .tag.transport { background: #e3f0fd; color: #1a56db; }
-  .tag.highlight { background: #fef3c7; color: #92400e; }
-  .tag.rest { background: #e8f5e9; color: #2e7d32; }
-
-  /* Table */
-  table {
-    width: 100%; border-collapse: collapse;
-    font-size: 14px;
-  }
-  th {
-    text-align: left; font-size: 12px; font-weight: 600;
-    color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 8px 12px; border-bottom: 2px solid var(--border);
-  }
-  td {
-    padding: 10px 12px; border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  tr.subtotal td { font-weight: 700; border-top: 2px solid var(--accent); background: var(--highlight); }
-  tr.total td { font-weight: 700; font-size: 16px; color: var(--accent2); background: var(--highlight); }
-  .num { text-align: right; font-variant-numeric: tabular-nums; }
-
-  /* Summary cards */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-  .stat { text-align: center; padding: 20px; }
-  .stat .num-big { font-size: 32px; font-weight: 800; color: var(--accent2); }
-  .stat .label { font-size: 13px; color: var(--muted); margin-top: 4px; }
-
-  /* Map */
-  #route-map { height: 420px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; z-index: 1; }
-  .map-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; margin-top: 8px; color: var(--muted); }
-  .map-legend span { display: flex; align-items: center; gap: 4px; }
-  .map-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .map-legend .dot.city { background: var(--accent2); }
-  .map-legend .dot.fly { background: #1a56db; }
-  .map-legend .dot.rail { background: #d97706; }
-  .map-legend .line { width: 20px; height: 2px; display: inline-block; }
-  .map-legend .line.fly { background: #1a56db; border: none; }
-  .map-legend .line.rail { background: #d97706; border: none; }
-
-  .route-flow {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-    font-size: 14px; font-weight: 600; padding: 16px 0; overflow-x: auto;
-  }
-  .route-node {
-    padding: 6px 14px; border-radius: 8px; white-space: nowrap;
-    background: var(--card); border: 1px solid var(--border);
-  }
-  .route-arrow { color: var(--accent); font-size: 18px; }
-  .route-nights { font-size: 11px; color: var(--muted); display: block; }
-
-  /* Tip box */
-  .tip { background: #fef9e7; border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 14px; }
-
-  /* Responsive */
-  @media (max-width: 640px) {
-    .container { padding: 20px 12px 60px; }
-    h1 { font-size: 22px; }
-    .grid { grid-template-columns: repeat(2, 1fr); }
-    table { font-size: 12px; }
-    td, th { padding: 6px 8px; }
-  }
-
-  /* Print */
-  @media print {
-    nav { display: none; }
-    .card { break-inside: avoid; box-shadow: none; }
-    body { background: #fff; }
-    section { page-break-before: always; }
-  }
+  @media print { nav { display:none; } .card { break-inside:avoid; box-shadow:none; } body { background:#fff; } }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="#overview" class="active">概览</a>
-  <a href="#route">路线</a>
+  <a href="#route">路线地图</a>
+  <a href="#compare">交通对比</a>
   <a href="#itinerary">每日行程</a>
   <a href="#budget">费用预算</a>
-  <a href="#tips">贴士</a>
+  <a href="#tips">出行贴士</a>
 </nav>
 
 <div class="container">
 
 <!-- ========== HEADER ========== -->
 <section id="overview">
-  <h1>🗺️ 欧洲多国旅行计划</h1>
-  <p class="subtitle">2026年6月29日（周一）— 7月17日（周五）· 19天18晚 · 省时路线 意→梵→摩→法→瑞 · 5国8城</p>
+  <h1>🗺️ 欧洲旅行计划</h1>
+  <p class="subtitle">2026年6月29日（周一）— 7月17日（周五）· 19天18晚 · 意→梵→西→法→瑞</p>
 
-  <div class="grid" style="margin-top: 24px;">
-    <div class="card stat">
-      <div class="num-big">8</div><div class="label">总人数</div>
-    </div>
-    <div class="card stat">
-      <div class="num-big">5</div><div class="label">国家</div>
-    </div>
-    <div class="card stat">
-      <div class="num-big">8</div><div class="label">城市</div>
-    </div>
-    <div class="card stat">
-      <div class="num-big">19</div><div class="label">天数</div>
-    </div>
-    <div class="card stat">
-      <div class="num-big">¥2.0万</div><div class="label">人均预算</div>
-    </div>
-    <div class="card stat">
-      <div class="num-big">¥20.4万</div><div class="label">全团总预算</div>
-    </div>
+  <div class="grid" style="margin-top:24px;">
+    <div class="card stat"><div class="num-big">8</div><div class="label">总人数</div></div>
+    <div class="card stat"><div class="num-big">5</div><div class="label">国家（含梵蒂冈）</div></div>
+    <div class="card stat"><div class="num-big">7</div><div class="label">城市 + 2小镇</div></div>
+    <div class="card stat"><div class="num-big">19</div><div class="label">天数</div></div>
+    <div class="card stat"><div class="num-big">¥2.0万</div><div class="label">人均预算</div></div>
+    <div class="card stat"><div class="num-big">¥20万</div><div class="label">全团预算</div></div>
   </div>
 
   <div class="card" style="margin-top:20px;">
+    <h3>路线：罗马进 → 苏黎世出（一路向北）</h3>
+    <div class="route-flow">
+      <div class="route-node">🇮🇹 罗马<span class="route-nights">4晚</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇮🇹 佛罗伦萨<span class="route-nights">3晚</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇮🇹 威尼斯<span class="route-nights">2晚</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇪🇸 巴塞罗那<span class="route-nights">3晚</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇫🇷 巴黎<span class="route-nights">3晚</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇨🇭 卢塞恩<span class="route-nights">4晚</span></div>
+    </div>
+    <div class="tip" style="margin-top:12px;">
+      <strong>为什么罗马进而不是米兰？</strong>米兰在意大利最北，罗马在最中间偏南。你们要去的威尼斯、佛罗伦萨、罗马都在意大利中部和南部。从米兰入境再南下罗马（3h高铁），相当于多走一段回头路。罗马入境则一路北上，方向顺。米兰更适合「只去瑞士+北意大利」的行程。
+    </div>
+  </div>
+
+  <div class="card">
     <h3>出发地分布</h3>
     <table>
-      <tr><td>深圳出发</td><td>3人</td><td>✈️ 深圳 SZX → 罗马 FCO</td></tr>
-      <tr><td>上海出发</td><td>2人</td><td>✈️ 上海 PVG → 罗马 FCO</td></tr>
+      <tr><td>深圳出发</td><td>3人</td><td>✈️ 深圳 SZX → 罗马 FCO（或经米兰 MXP 省钱）</td></tr>
+      <tr><td>上海出发</td><td>2人</td><td>✈️ 上海 PVG → 罗马 FCO（或经米兰 MXP 省钱）</td></tr>
       <tr><td>瑞典出发</td><td>2人</td><td>✈️ 斯德哥尔摩 ARN → 罗马 FCO</td></tr>
-      <tr><td>瑞典（后半程）</td><td>1人</td><td>✈️ ARN → 苏黎世 ZRH（7月14日汇合卢塞恩）</td></tr>
+      <tr><td>瑞典（后半程）</td><td>1人</td><td>✈️ ARN → 苏黎世 ZRH（7月13日去卢塞恩汇合）</td></tr>
     </table>
   </div>
 </section>
 
-<!-- ========== ROUTE ========== -->
+<!-- ========== ROUTE MAP ========== -->
 <section id="route">
-  <h2>路线总览</h2>
+  <h2>路线地图</h2>
   <div id="route-map"></div>
   <div class="map-legend">
     <span><span class="dot city"></span> 停留城市</span>
     <span><span class="line fly"></span> 航班</span>
     <span><span class="line rail"></span> 火车</span>
-  </div>
-  <div class="card" style="margin-top:16px;">
-    <div class="route-flow">
-      <div class="route-node" style="border:1px dashed #9333ea;">🇮🇹 米兰(备选入境)<span class="route-nights">省钱·可选</span></div>
-      <span class="route-arrow" style="color:#9333ea;">⇢</span>
-      <div class="route-node">🇮🇹 罗马<span class="route-nights">4晚</span></div>
-      <span class="route-arrow">→</span>
-      <div class="route-node">🇮🇹 佛罗伦萨<span class="route-nights">3晚</span></div>
-      <span class="route-arrow">→</span>
-      <div class="route-node">🇫🇷 尼斯<span class="route-nights">3晚</span></div>
-      <span class="route-arrow">→</span>
-      <div class="route-node">🇫🇷 巴黎<span class="route-nights">4晚</span></div>
-      <span class="route-arrow">→</span>
-      <div class="route-node">🇨🇭 卢塞恩<span class="route-nights">4晚</span></div>
-    </div>
-    <div class="tags">
-      <span class="tag transport">罗马→佛罗伦萨 高铁1.5h</span>
-      <span class="tag transport">佛罗伦萨→尼斯 廉航1h</span>
-      <span class="tag transport">尼斯→巴黎 廉航1.5h</span>
-      <span class="tag transport">巴黎→卢塞恩 高铁4.5h</span>
-    </div>
-    <div class="tip" style="margin-top:8px;">
-      ⚡ <strong>省时对比：</strong>去掉巴塞罗那（地理上的回头路），节省约 <strong>8-10小时</strong> 机场+飞行时间，多出3天分配到尼斯、巴黎、卢塞恩，老人更轻松。
-      <br>🇪🇸 如仍想去巴塞罗那，可从尼斯直飞（1.2h），在尼斯和卢塞恩之间插入3天，路线变为 → 尼斯→巴塞罗那→巴黎→卢塞恩。
-    </div>
+    <span><span class="dot fly"></span> 威尼斯→巴塞罗那、巴塞罗那→巴黎</span>
   </div>
 
-  <div class="card" style="border-left: 3px solid #9333ea;">
-    <h3>💰 省钱备选：米兰入境 vs 罗马入境</h3>
+  <div class="card" style="margin-top:16px;">
+    <h3>📍 各城市核心看点</h3>
     <table>
-      <tr><th></th><th>米兰 MXP/BGY</th><th>罗马 FCO</th></tr>
-      <tr><td>中国飞抵票价</td><td>约 ¥3,200-4,000</td><td>约 ¥3,800-4,500</td></tr>
-      <tr><td>5人可省</td><td colspan="2" style="color:#2e7d32;font-weight:700;">约 ¥5,000-7,500</td></tr>
-      <tr><td>到罗马的额外时间</td><td>高铁 3h（€55）</td><td>—</td></tr>
-      <tr><td>适合情况</td><td colspan="2">差价 > ¥500/人时值得考虑，米兰先住1晚休整再南下罗马</td></tr>
+      <tr><td style="white-space:nowrap">🇮🇹 罗马</td><td>斗兽场、梵蒂冈、许愿池、万神殿——千年帝国之都</td></tr>
+      <tr><td style="white-space:nowrap">🇮🇹 佛罗伦萨</td><td>文艺复兴发源地、乌菲兹美术馆、百花大教堂、老桥</td></tr>
+      <tr><td style="white-space:nowrap">🇮🇹 比萨+五渔村</td><td>斜塔打卡 + 五彩悬崖渔村（一日串烧）</td></tr>
+      <tr><td style="white-space:nowrap">🇮🇹 威尼斯</td><td>水上之都、圣马可广场、贡多拉、叹息桥</td></tr>
+      <tr><td style="white-space:nowrap">🇪🇸 巴塞罗那</td><td>圣家堂、高迪三件套、地中海海滩</td></tr>
+      <tr><td style="white-space:nowrap">🇫🇷 巴黎</td><td>埃菲尔铁塔、卢浮宫、塞纳河、蒙马特（不购物纯玩）</td></tr>
+      <tr><td style="white-space:nowrap">🇨🇭 卢塞恩</td><td>卡佩尔廊桥、瑞吉山、因特拉肯、阿尔卑斯湖光山色</td></tr>
     </table>
-    <div class="tip" style="margin-top:12px;">
-      <strong>🚗 米兰开车去瑞士卢塞恩：</strong>约 2.5h（240km），全程高速，穿越阿尔卑斯山麓景色壮丽。租车一天约 €60-100 + 油费 €40。但需确认租车公司允许跨境（意大利→瑞士），瑞士高速需购买通行贴纸（CHF 40/年）。对老人团来说，火车更省心（2.5h 直达，€55）。
-    </div>
+  </div>
+</section>
+
+<!-- ========== TRANSPORT COMPARISON ========== -->
+<section id="compare">
+  <h2>🚀 交通方式对比（飞机 vs 火车 vs 自驾）</h2>
+
+  <div class="card">
+    <h3>① 罗马 → 佛罗伦萨（275km）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>适合度</th></tr>
+      <tr class="best"><td>🚄 高铁 Frecciarossa</td><td>1.5h 市中心到市中心</td><td>€55</td><td>✅ 最佳</td></tr>
+      <tr><td>🚗 自驾</td><td>3h + 老城禁行区麻烦</td><td>租车€60+油€30÷7≈€13</td><td>❌ 佛罗伦萨ZTL禁行</td></tr>
+      <tr><td>✈️ 飞机</td><td>无直飞航线</td><td>—</td><td>不适用</td></tr>
+    </table>
   </div>
 
   <div class="card">
-    <h3>📍 各城市亮点</h3>
-    <table>
-      <tr>
-        <td style="white-space:nowrap">🇮🇹 罗马</td>
-        <td>斗兽场、梵蒂冈、许愿池、万神殿——千年帝国之都</td>
-      </tr>
-      <tr>
-        <td style="white-space:nowrap">🇮🇹 佛罗伦萨</td>
-        <td>文艺复兴发源地、乌菲兹美术馆、老桥、比萨斜塔</td>
-      </tr>
-      <tr>
-        <td style="white-space:nowrap">🇫🇷 尼斯 + 🇲🇨 摩纳哥</td>
-        <td>蔚蓝海岸、天使湾、世界第二小国一日游</td>
-      </tr>
-      <tr>
-        <td style="white-space:nowrap">🇫🇷 巴黎</td>
-        <td>埃菲尔铁塔、卢浮宫、塞纳河、蒙马特</td>
-      </tr>
-      <tr>
-        <td style="white-space:nowrap">🇨🇭 卢塞恩</td>
-        <td>卡佩尔廊桥、瑞吉山、阿尔卑斯湖光山色</td>
-      </tr>
+    <h3>② 佛罗伦萨 → 威尼斯（260km）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>适合度</th></tr>
+      <tr class="best"><td>🚄 高铁 Frecciarossa</td><td>2h 直达</td><td>€45</td><td>✅ 最佳</td></tr>
+      <tr><td>🚗 自驾</td><td>3h + 威尼斯是步行城车停大陆</td><td>€40÷7≈€6</td><td>❌ 车只能停大陆码头</td></tr>
     </table>
+  </div>
+
+  <div class="card">
+    <h3>③ 威尼斯 → 巴塞罗那（跨海，约1100km）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>适合度</th></tr>
+      <tr class="best"><td>✈️ 廉航（Ryanair/Vueling）</td><td>2h 飞行 + 机场交通 ≈ 5h 门到门</td><td>€60-100</td><td>✅ 唯一合理方案</td></tr>
+      <tr><td>🚗 自驾</td><td>11h 不含休息</td><td>租车€120+油€120+过路€80≈€320÷7≈€46</td><td>❌ 一整天废在路上</td></tr>
+      <tr><td>🚄 火车</td><td>无直达，需转3次约20h</td><td>€200+</td><td>❌</td></tr>
+    </table>
+    <div class="warn">⚠️ 威尼斯机场 VCE 和 Treviso TSF 两个机场。Ryanair 飞 TSF 偏远机场，到威尼斯市区大巴1h €12。Vueling 飞 VCE 近机场，大巴20min €10。</div>
+  </div>
+
+  <div class="card">
+    <h3>④ 巴塞罗那 → 巴黎（约1050km）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>适合度</th></tr>
+      <tr class="best"><td>✈️ 廉航（Vueling/Transavia）</td><td>2h 飞行 + 机场交通 ≈ 5-6h</td><td>€70-110</td><td>✅ 最佳</td></tr>
+      <tr><td>🚄 TGV 高铁</td><td>6.5h 直达</td><td>€150</td><td>⚠️ 贵但舒适，适合怕飞的老人</td></tr>
+      <tr><td>🚗 自驾</td><td>10h 不含休息</td><td>约€300÷7≈€43</td><td>❌</td></tr>
+    </table>
+    <div class="warn">⚠️ 巴黎有三个机场！廉航常飞 BVA（博韦）距市区80km 大巴1.5h €17，或 ORY（奥利）距市区14km 轻轨30min €11。尽量选 ORY，避开 BVA 和 CDG（CDG 一般法航等全服务航空用，不一定是廉航）。</div>
+  </div>
+
+  <div class="card">
+    <h3>⑤ 巴黎 → 卢塞恩（约650km）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>适合度</th></tr>
+      <tr class="best"><td>🚄 TGV Lyria 高铁</td><td>4.5h 巴黎里昂站→巴塞尔→卢塞恩</td><td>€110</td><td>✅ 最佳，风景好</td></tr>
+      <tr><td>✈️ 飞机</td><td>飞行1h + 苏黎世机场到卢塞恩1h火车 ≈ 4-5h</td><td>€80+火车€25=€105</td><td>⚠️ 省不了时间还折腾</td></tr>
+      <tr><td>🚗 自驾</td><td>7h 不含休息</td><td>€100油+€60过路+瑞士高速贴CHF40 ≈ €200÷7≈€29</td><td>❌ 跨境还车贵</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left:3px solid #9333ea;">
+    <h3>💡 备选：米兰 → 瑞士卢塞恩（如果不走罗马入境）</h3>
+    <table class="compare">
+      <tr><th>方式</th><th>时间</th><th>费用/人</th><th>备注</th></tr>
+      <tr><td>🚄 火车</td><td>2.5h 直达</td><td>€55</td><td>最省心</td></tr>
+      <tr><td>🚗 自驾</td><td>2.5h</td><td>租车€60+油€30≈€90</td><td>需海牙认证驾照翻译 + 瑞士高速贴纸 CHF 40</td></tr>
+      <tr><td>🚌 FlixBus 大巴</td><td>3h</td><td>€15-25</td><td>仅周末有直达班次</td></tr>
+    </table>
+  </div>
+
+  <div class="good">
+    <strong>📊 总结：</strong>本行程中<strong>火车</strong>是意大利段最佳方案（快、市中心到市中心、不用提前到站），<strong>廉航</strong>是跨海段（威尼斯→巴塞罗那、巴塞罗那→巴黎）唯一合理方案。<strong>自驾</strong>不建议——老城ZTL禁行区多、停车贵、跨境还车费高、需要国际驾照。全程公共交通最省心。
   </div>
 </section>
 
@@ -289,22 +233,17 @@
 
   <div class="tl">
 
-    <!-- Day 1 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第1天 · 6月29日 周一</div>
       <div class="card">
         <h3>📍 罗马集合日 🇮🇹</h3>
-        <p>各队飞抵罗马菲乌米奇诺机场（FCO）。中国出发建议早班机（时差-6h，飞行12-14h），瑞典出发飞行约3h。</p>
-        <p>入住休息、倒时差。傍晚若精力允许，步行西班牙广场、许愿池附近轻逛。</p>
-        <div class="tags">
-          <span class="tag">集合日</span>
-          <span class="tag rest">休息为主</span>
-        </div>
+        <p>各队飞抵罗马 FCO。中国出发约12-14h，瑞典出发约3h，统一选上午/中午到达航班。</p>
+        <p><strong>倒时差关键：</strong>到达后尽量撑住不睡，逛西班牙广场、许愿池（轻量步行），撑到晚上9-10点倒头睡，第二天直接切换欧洲时间。撑不住也别硬扛，身体第一。</p>
+        <div class="tags"><span class="tag">集合日</span><span class="tag rest">倒时差</span></div>
       </div>
     </div>
 
-    <!-- Day 2 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第2天 · 6月30日 周二</div>
@@ -313,210 +252,200 @@
         <p><strong>上午：</strong>梵蒂冈博物馆 + 西斯廷礼拜堂（提前预约 €22）</p>
         <p><strong>下午：</strong>圣彼得大教堂（免费），穹顶登顶 €10</p>
         <p><strong>傍晚：</strong>圣天使城堡外观，台伯河畔散步</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag">步行较多</span></div>
-        <div class="tip">⚠️ 务必提前2-4周网上预约！现场排队可能2-3小时。</div>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag">步行多</span></div>
+        <div class="tip">⚠️ 必须提前2-4周网上预约！现场排队2-3小时。</div>
       </div>
     </div>
 
-    <!-- Day 3 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第3天 · 7月1日 周三</div>
       <div class="card">
         <h3>🏛️ 古罗马</h3>
         <p><strong>上午：</strong>斗兽场 + 古罗马广场 + 帕拉蒂尼山（联票 €18）</p>
-        <p><strong>下午：</strong>午休回酒店休息（老人必备！）</p>
+        <p><strong>下午：</strong>午休（12:00-15:00 老人必备）</p>
         <p><strong>傍晚：</strong>威尼斯广场、图拉真柱</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag rest">午休安排</span></div>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag rest">午休</span></div>
       </div>
     </div>
 
-    <!-- Day 4 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第4天 · 7月2日 周四</div>
       <div class="card">
-        <h3>⛲ 罗马老城漫步</h3>
+        <h3>⛲ 罗马老城</h3>
         <p><strong>上午：</strong>万神殿（€5）、纳沃纳广场</p>
-        <p><strong>下午：</strong>特雷维喷泉（许愿池）、西班牙广场</p>
+        <p><strong>下午：</strong>特雷维喷泉、西班牙广场</p>
         <p><strong>晚上：</strong>特拉斯提弗列区晚餐</p>
         <div class="tags"><span class="tag rest">轻松日</span></div>
       </div>
     </div>
 
-    <!-- Day 5 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第5天 · 7月3日 周五</div>
       <div class="card">
         <h3>🚄 罗马 → 佛罗伦萨</h3>
-        <p><strong>上午：</strong>Frecciarossa高铁，1.5h（€55）</p>
+        <p><strong>上午：</strong>Frecciarossa高铁 1.5h（€55）</p>
         <p><strong>下午：</strong>圣母百花大教堂外观、老桥、共和国广场</p>
-        <div class="tags"><span class="tag transport">移动日</span><span class="tag rest">轻松日</span></div>
+        <p>入住后轻量活动，养精蓄锐备战明天的免费博物馆日</p>
+        <div class="tags"><span class="tag transport">移动日</span><span class="tag rest">轻松</span></div>
       </div>
     </div>
 
-    <!-- Day 6 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第6天 · 7月4日 周六</div>
       <div class="card">
         <h3>🎨 佛罗伦萨文艺复兴</h3>
         <p><strong>上午：</strong>乌菲兹美术馆（€25）或 学院美术馆·大卫像（€16）</p>
-        <p><strong>下午：</strong>圣洛伦佐市场、皮蒂宫外观、米开朗基罗广场全景</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag">建议老人只选一个美术馆</span></div>
+        <p><strong>下午：</strong>圣洛伦佐市场、皮蒂宫外观、米开朗基罗广场看全景日落</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag">老人选一个美术馆即可</span></div>
       </div>
     </div>
 
-    <!-- Day 7 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
-      <div class="tl-date">第7天 · 7月5日 周日</div>
+      <div class="tl-date">第7天 · 7月5日 周日 🔥 免费博物馆日</div>
       <div class="card">
-        <h3>🗼 比萨半日游</h3>
-        <p><strong>上午：</strong>火车1h至比萨（往返€10），看斜塔（登塔 €20）</p>
-        <p><strong>下午：</strong>返回佛罗伦萨，自由活动</p>
-        <div class="tags"><span class="tag highlight">⭐ 标志性景点</span></div>
+        <h3>🗼 比萨 + 🌊 五渔村 一日串烧</h3>
+        <p><strong>上午：</strong>火车1h→比萨斜塔打卡（1h足够），火车继续→五渔村</p>
+        <p><strong>下午：</strong>五渔村（Cinque Terre）徒步/火车跳村游，悬崖彩色渔村</p>
+        <p>🔥 <strong>7月5日是周日，意大利国立博物馆免费！</strong>但今天安排了跨城游，博物馆免费日更建议用于前一天（7/4周六）——但7/4不是周日。如果想让免费日发挥最大价值，可以把7/5改为佛罗伦萨博物馆日（乌菲兹/学院免费），把比萨+五渔村挪到7/4。具体你们定。</p>
+        <div class="tags"><span class="tag highlight">⭐ 标志景点</span><span class="tag free">🔥 免费博物馆日</span></div>
       </div>
     </div>
 
-    <!-- Day 8 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第8天 · 7月6日 周一</div>
       <div class="card">
-        <h3>✈️ 佛罗伦萨 → 尼斯 🇫🇷</h3>
-        <p><strong>上午：</strong>廉航 佛罗伦萨→尼斯 1h（约€80-120）</p>
-        <p><strong>下午：</strong>英国人散步大道、老城（Cours Saleya）、城堡山俯瞰天使湾</p>
-        <div class="tags"><span class="tag transport">移动日</span><span class="tag rest">轻松</span></div>
-      </div>
-    </div>
-
-    <!-- Day 9 -->
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-date">第9天 · 7月7日 周二</div>
-      <div class="card">
-        <h3>🇲🇨 摩纳哥一日游</h3>
-        <p>火车30分钟（往返€8）· 亲王宫（€10）· 海洋博物馆（€19）· 蒙特卡洛赌场外观 · F1赛道漫步</p>
-        <p>下午返回尼斯海边休息</p>
-        <div class="tags"><span class="tag highlight">⭐ 跨国打卡</span></div>
-      </div>
-    </div>
-
-    <!-- Day 10 -->
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-date">第10天 · 7月8日 周三</div>
-      <div class="card">
-        <h3>🏖️ 尼斯蔚蓝海岸放松日</h3>
-        <p><strong>上午：</strong>天使湾游泳/日光浴，或马蒂斯博物馆（€12）</p>
-        <p><strong>下午：</strong>老城自由闲逛、萨莱亚鲜花市场、海边咖啡发呆</p>
-        <p><strong>傍晚：</strong>英国人散步大道看日落</p>
-        <div class="tags"><span class="tag rest">休息日</span><span class="tag">不用赶路的一天</span></div>
-      </div>
-    </div>
-
-    <!-- Day 11 -->
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-date">第11天 · 7月9日 周四</div>
-      <div class="card">
-        <h3>✈️ 尼斯 → 巴黎 🇫🇷</h3>
-        <p><strong>上午：</strong>廉航 尼斯→巴黎 1.5h（约€70-100）</p>
-        <p><strong>下午：</strong>蒙马特高地、圣心大教堂（免费）、小丘广场</p>
-        <p>入住后可步行至爱墙、红磨坊外观</p>
+        <h3>🚄 佛罗伦萨 → 威尼斯</h3>
+        <p><strong>上午：</strong>高铁 2h（€45），中午到达威尼斯主岛</p>
+        <p><strong>下午：</strong>圣马可广场、圣马可大教堂（免费）、叹息桥、里亚托桥</p>
+        <p><strong>傍晚：</strong>坐贡多拉或水上巴士游大运河（水上巴士 €9.5/次）</p>
         <div class="tags"><span class="tag transport">移动日</span></div>
       </div>
     </div>
 
-    <!-- Day 12 -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">第9天 · 7月7日 周二</div>
+      <div class="card">
+        <h3>🛶 威尼斯全天</h3>
+        <p><strong>上午：</strong>总督宫（€25）、叹息桥内部参观</p>
+        <p><strong>下午：</strong>彩色岛 Burano（水上巴士1h，彩色房子拍照绝美）、玻璃岛 Murano</p>
+        <p>全天步行+水上巴士，节奏自由</p>
+        <div class="tags"><span class="tag highlight">⭐ 一生必去</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">第10天 · 7月8日 周三</div>
+      <div class="card">
+        <h3>✈️ 威尼斯 → 巴塞罗那 🇪🇸</h3>
+        <p><strong>上午：</strong>水上巴士至威尼斯机场，廉航 2h（约€60-100）</p>
+        <p><strong>下午：</strong>哥特区漫步、巴塞罗那主教堂</p>
+        <p>傍晚兰布拉大道感受气氛</p>
+        <div class="tags"><span class="tag transport">移动日</span></div>
+        <div class="warn">⚠️ 巴塞罗那也是"贼窝"之一，兰布拉大道和地铁小心扒手。背包背前面，手机别放桌上。</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">第11天 · 7月9日 周四</div>
+      <div class="card">
+        <h3>⛪ 圣家堂 + 高迪建筑</h3>
+        <p><strong>上午：</strong>圣家堂（€26，提前1个月预约！彩色玻璃窗上午光线最佳）</p>
+        <p><strong>下午：</strong>古埃尔公园（€10）、巴特罗之家外观、米拉之家外观</p>
+        <div class="tags"><span class="tag highlight">⭐ 全程最大亮点</span></div>
+        <div class="tip">⚠️ 圣家堂是全球最难约景点之一，提前1个月到官网抢票！选上午10点时段光线最好。</div>
+      </div>
+    </div>
+
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第12天 · 7月10日 周五</div>
       <div class="card">
-        <h3>🗼 埃菲尔铁塔 + 塞纳河游船</h3>
-        <p><strong>上午：</strong>埃菲尔铁塔（建议只到二层 €17，登顶€28）</p>
-        <p><strong>下午：</strong>塞纳河游船（€15-18，约1h），香榭丽舍大道、凯旋门外观</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag rest">游船对老人友好</span></div>
+        <h3>🏖️ 巴塞罗那海滩 + 蒙锥克山</h3>
+        <p><strong>上午：</strong>波盖利亚市场吃早餐、兰布拉大道</p>
+        <p><strong>下午：</strong>巴塞罗内塔海滩放松（地中海！）或蒙锥克山城堡看全景</p>
+        <div class="tags"><span class="tag rest">半天海滩半天城</span></div>
       </div>
     </div>
 
-    <!-- Day 13 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第13天 · 7月11日 周六</div>
       <div class="card">
-        <h3>🖼️ 卢浮宫 + 玛黑区</h3>
-        <p><strong>上午：</strong>卢浮宫（€22，建议只看"三宝"：蒙娜丽莎+胜利女神+维纳斯）</p>
-        <p><strong>下午：</strong>巴黎圣母院外观、圣礼拜堂（€11.5）、玛黑区漫步</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag">量力而行，不必逛完</span></div>
+        <h3>✈️ 巴塞罗那 → 巴黎 🇫🇷</h3>
+        <p><strong>上午：</strong>廉航 巴塞罗那→巴黎 2h（约€70-110），尽量选ORY（奥利机场，距市区14km轻轨30min）</p>
+        <p><strong>下午：</strong>蒙马特高地、圣心大教堂（免费）、小丘广场画家村</p>
+        <div class="tags"><span class="tag transport">移动日</span></div>
+        <div class="warn">⚠️ 避开 BVA 博韦机场（距巴黎80km大巴1.5h），订票前确认是 CDG/ORY 还是 BVA！</div>
       </div>
     </div>
 
-    <!-- Day 14 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第14天 · 7月12日 周日</div>
       <div class="card">
-        <h3>🏰 巴黎自由日</h3>
-        <p><strong>选项A：</strong>凡尔赛宫半日游（火车40分钟，€19.5）</p>
-        <p><strong>选项B（推荐老人）：</strong>卢森堡公园 + 先贤祠 + 拉丁区闲逛 + 老佛爷百货</p>
-        <p><strong>选项C：</strong>奥赛博物馆（€16，印象派天堂，比卢浮宫小而精）</p>
-        <div class="tags"><span class="tag rest">多一整天慢慢逛巴黎</span></div>
+        <h3>🗼 埃菲尔铁塔 + 塞纳河游船</h3>
+        <p><strong>上午：</strong>埃菲尔铁塔（建议只到二层 €17，老人不用登顶）</p>
+        <p><strong>下午：</strong>塞纳河游船（€15-18，1h），香榭丽舍大道、凯旋门外观</p>
+        <p>晚餐：拉丁区找家法式小馆</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag rest">游船老人友好</span></div>
       </div>
     </div>
 
-    <!-- Day 15 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第15天 · 7月13日 周一</div>
       <div class="card">
+        <h3>🖼️ 卢浮宫 + 玛黑区</h3>
+        <p><strong>上午：</strong>卢浮宫（€22，只看三宝：蒙娜丽莎+胜利女神+维纳斯，2h足够）</p>
+        <p><strong>下午：</strong>巴黎圣母院外观、圣礼拜堂（€11.5）、玛黑区漫步、孚日广场</p>
+        <p>不购物不逛老佛爷——纯享版游玩</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag">量力而行</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">第16天 · 7月14日 周二</div>
+      <div class="card">
         <h3>🚄 巴黎 → 卢塞恩 🇨🇭 + 第8人汇合</h3>
-        <p><strong>上午：</strong>TGV Lyria高铁 巴黎→巴塞尔→卢塞恩（约4.5h，€110），沿途法国田园风光</p>
-        <p><strong>第8人：</strong>斯德哥尔摩飞苏黎世（3h），火车1h至卢塞恩汇合</p>
+        <p><strong>上午：</strong>TGV Lyria高铁 巴黎→巴塞尔→卢塞恩 4.5h（€110），法国田园→瑞士雪山渐入佳境</p>
+        <p><strong>第8人：</strong>斯德哥尔摩 ARN 飞苏黎世 ZRH，火车1h至卢塞恩汇合</p>
         <p><strong>下午：</strong>卡佩尔廊桥、水塔、狮子纪念碑、湖边散步</p>
         <div class="tags"><span class="tag transport">移动日</span><span class="tag highlight">8人全员汇合！</span></div>
       </div>
     </div>
 
-    <!-- Day 16 -->
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-date">第16天 · 7月14日 周二</div>
-      <div class="card">
-        <h3>🏔️ 瑞吉山（Rigi）</h3>
-        <p>卢塞恩码头乘船 → 维茨瑙 → 齿轮火车上山（往返CHF 65）</p>
-        <p>山顶360°阿尔卑斯全景 + 湖区，全程交通工具代步，比少女峰平缓适合老人</p>
-        <div class="tags"><span class="tag highlight">⭐ 核心景点</span><span class="tag rest">老人友好</span></div>
-      </div>
-    </div>
-
-    <!-- Day 17 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第17天 · 7月15日 周三</div>
       <div class="card">
-        <h3>🚂 因特拉肯 / 少女峰远眺</h3>
-        <p><strong>全天：</strong>卢塞恩→因特拉肯火车2h（黄金山口快线，沿途绝美），小镇闲逛、远眺少女峰</p>
-        <p>不登山（少女峰登顶CHF 210太贵），小镇看山+湖景已足够震撼</p>
-        <div class="tags"><span class="tag rest">可选·不登山就不累</span></div>
+        <h3>🏔️ 瑞吉山（Rigi）</h3>
+        <p>卢塞恩码头乘船 → 维茨瑙 → 齿轮火车上山（往返 CHF 65）</p>
+        <p>山顶360°阿尔卑斯全景 + 湖区，全程交通工具代步，比少女峰平缓太多</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag rest">老人友好</span></div>
       </div>
     </div>
 
-    <!-- Day 18 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第18天 · 7月16日 周四</div>
       <div class="card">
-        <h3>🛶 卢塞恩湖游船 / 收尾日</h3>
-        <p><strong>上午：</strong>卢塞恩湖游船（CHF 25），湖光山色中告别欧洲</p>
-        <p><strong>下午：</strong>市区买巧克力、瑞士军刀等纪念品，自由活动</p>
-        <div class="tags"><span class="tag rest">收官·轻松日</span></div>
+        <h3>🚂 因特拉肯 / 少女峰远眺</h3>
+        <p><strong>全天：</strong>卢塞恩→因特拉肯 黄金山口快线 2h（沿途绝美），小镇看少女峰+湖景</p>
+        <p>不登山（登顶 CHF 210 太贵），小镇漫步已足够震撼</p>
+        <div class="tags"><span class="tag rest">可选·不登山不累</span></div>
       </div>
     </div>
 
-    <!-- Day 19 -->
     <div class="tl-item">
       <div class="tl-dot"></div>
       <div class="tl-date">第19天 · 7月17日 周五</div>
@@ -524,7 +453,7 @@
         <h3>🛫 苏黎世解散</h3>
         <p>卢塞恩火车1h至苏黎世机场（ZRH）</p>
         <p>✈️ 7人飞斯德哥尔摩 ARN | ✈️ 1人飞深圳 SZX / 新加坡 SIN</p>
-        <p style="font-size:13px;color:var(--muted);">备注：第8人可选择跟大队飞瑞典，或从苏黎世直接返回。</p>
+        <p style="font-size:13px;color:var(--muted);">第8人跟大队回瑞典，或自行决定。</p>
         <div class="tags"><span class="tag transport">解散日</span></div>
       </div>
     </div>
@@ -537,13 +466,11 @@
   <h2>费用预算</h2>
 
   <div class="card">
-    <h3>✈️ 国际机票</h3>
+    <h3>✈️ 国际机票（首段+末段）</h3>
     <table>
       <tr><th>航线</th><th class="num">估算(¥)</th><th class="num">人数</th><th class="num">小计(¥)</th></tr>
       <tr><td>深圳 SZX → 罗马 FCO</td><td class="num">4,500</td><td class="num">3</td><td class="num">13,500</td></tr>
-      <tr><td>　↳ 或 深圳 → 米兰 MXP（省¥800/人）</td><td class="num">3,700</td><td class="num">3</td><td class="num">11,100</td></tr>
       <tr><td>上海 PVG → 罗马 FCO</td><td class="num">3,800</td><td class="num">2</td><td class="num">7,600</td></tr>
-      <tr><td>　↳ 或 上海 → 米兰 MXP（省¥600/人）</td><td class="num">3,200</td><td class="num">2</td><td class="num">6,400</td></tr>
       <tr><td>斯德哥尔摩 ARN → 罗马 FCO</td><td class="num">1,000</td><td class="num">2</td><td class="num">2,000</td></tr>
       <tr><td>苏黎世 ZRH → 斯德哥尔摩 ARN</td><td class="num">1,200</td><td class="num">7</td><td class="num">8,400</td></tr>
       <tr><td>苏黎世 ZRH → 深圳/新加坡</td><td class="num">4,500</td><td class="num">1</td><td class="num">4,500</td></tr>
@@ -553,71 +480,85 @@
   </div>
 
   <div class="card">
-    <h3>🚆 欧洲内陆交通（每人）</h3>
+    <h3>🚆✈️ 欧洲内陆交通</h3>
     <table>
-      <tr><th>路段</th><th>方式</th><th class="num">价格(€)</th></tr>
-      <tr><td>罗马 → 佛罗伦萨</td><td>高铁 1.5h</td><td class="num">55</td></tr>
-      <tr><td>佛罗伦萨 → 尼斯</td><td>廉航 1h</td><td class="num">100</td></tr>
-      <tr><td>尼斯 ↔ 摩纳哥</td><td>火车往返</td><td class="num">8</td></tr>
-      <tr><td>尼斯 → 巴黎</td><td>廉航 1.5h</td><td class="num">85</td></tr>
-      <tr><td>巴黎 → 卢塞恩</td><td>高铁 4.5h</td><td class="num">110</td></tr>
-      <tr><td>卢塞恩 → 苏黎世机场</td><td>火车 1h</td><td class="num">25</td></tr>
-      <tr class="subtotal"><td>合计/人</td><td></td><td class="num">€383 ≈ ¥3,000</td></tr>
-      <tr><td colspan="2">× 7人（第8人已有）</td><td class="num">¥21,000</td></tr>
+      <tr><th>路段</th><th>方式</th><th class="num">价格/人</th></tr>
+      <tr><td>罗马 → 佛罗伦萨</td><td>高铁 1.5h</td><td class="num">€55</td></tr>
+      <tr><td>佛罗伦萨 → 比萨+五渔村 往返</td><td>火车</td><td class="num">€30</td></tr>
+      <tr><td>佛罗伦萨 → 威尼斯</td><td>高铁 2h</td><td class="num">€45</td></tr>
+      <tr><td>威尼斯 → 巴塞罗那</td><td>廉航 2h</td><td class="num">€80</td></tr>
+      <tr><td>巴塞罗那 → 巴黎</td><td>廉航 2h</td><td class="num">€90</td></tr>
+      <tr><td>巴黎 → 卢塞恩</td><td>高铁 4.5h</td><td class="num">€110</td></tr>
+      <tr><td>卢塞恩 → 苏黎世机场</td><td>火车 1h</td><td class="num">€25</td></tr>
+      <tr class="subtotal"><td>合计/人</td><td></td><td class="num">€435 ≈ ¥3,400</td></tr>
+      <tr><td colspan="2">× 7人（第8人仅卢塞恩→苏黎世 €25）</td><td class="num">¥24,000</td></tr>
     </table>
   </div>
 
   <div class="card">
-    <h3>🏠 住宿（18晚，Airbnb公寓为主）</h3>
+    <h3>🏠 住宿（18晚，酒店为主 + 部分Airbnb）</h3>
     <table>
       <tr><th>城市</th><th class="num">晚数</th><th class="num">人数</th><th class="num">每晚预算(€)</th><th class="num">小计(€)</th></tr>
-      <tr><td>罗马</td><td class="num">4</td><td class="num">7</td><td class="num">350</td><td class="num">1,400</td></tr>
-      <tr><td>佛罗伦萨</td><td class="num">3</td><td class="num">7</td><td class="num">320</td><td class="num">960</td></tr>
-      <tr><td>尼斯</td><td class="num">3</td><td class="num">7</td><td class="num">350</td><td class="num">1,050</td></tr>
-      <tr><td>巴黎</td><td class="num">4</td><td class="num">7</td><td class="num">400</td><td class="num">1,600</td></tr>
-      <tr><td>卢塞恩</td><td class="num">4</td><td class="num">8</td><td class="num">450</td><td class="num">1,800</td></tr>
-      <tr class="subtotal"><td>住宿合计</td><td class="num">18</td><td></td><td></td><td class="num">€6,810 ≈ ¥53,100</td></tr>
+      <tr><td>罗马</td><td class="num">4</td><td class="num">7</td><td class="num">380</td><td class="num">1,520</td></tr>
+      <tr><td>佛罗伦萨</td><td class="num">3</td><td class="num">7</td><td class="num">350</td><td class="num">1,050</td></tr>
+      <tr><td>威尼斯</td><td class="num">2</td><td class="num">7</td><td class="num">400</td><td class="num">800</td></tr>
+      <tr><td>巴塞罗那</td><td class="num">3</td><td class="num">7</td><td class="num">350</td><td class="num">1,050</td></tr>
+      <tr><td>巴黎</td><td class="num">3</td><td class="num">7</td><td class="num">420</td><td class="num">1,260</td></tr>
+      <tr><td>卢塞恩</td><td class="num">4</td><td class="num">8</td><td class="num">480</td><td class="num">1,920</td></tr>
+      <tr class="subtotal"><td>住宿合计</td><td class="num">18</td><td></td><td></td><td class="num">€7,600 ≈ ¥59,300</td></tr>
     </table>
-    <div class="tip">以2-3套Airbnb公寓/晚分担，人均每晚约¥400-450。有厨房可做饭节省餐饮费。</div>
+    <div class="tip">
+      <strong>关于住宿选择：</strong>之前推荐Airbnb省钱但需自己做饭+协调入住时间。考虑到老人多，建议<strong>酒店为主</strong>（有前台寄存行李、不用自己打扫），选景点步行范围内的经济型酒店或公寓酒店。罗马/巴黎/巴塞罗那三大"贼窝"区域，酒店比偏远Airbnb安全得多。欧洲酒店大多不提供牙膏牙刷拖鞋，自备。
+    </div>
   </div>
 
   <div class="card">
-    <h3>🍽️ 餐饮 & 🎫 景点 & 🚌 市内交通</h3>
+    <h3>🍽️ 餐饮（人均每天约€35）</h3>
     <table>
-      <tr><th>项目</th><th>每日预算/人</th><th class="num">天数</th><th class="num">人均(€)</th><th class="num">7人(€)</th></tr>
-      <tr><td>早餐（面包+咖啡）</td><td>€5</td><td class="num">18</td><td class="num">90</td><td class="num">630</td></tr>
-      <tr><td>午餐（简餐）</td><td>€12</td><td class="num">18</td><td class="num">216</td><td class="num">1,512</td></tr>
-      <tr><td>晚餐（餐厅）</td><td>€18</td><td class="num">18</td><td class="num">324</td><td class="num">2,268</td></tr>
-      <tr><td>零食饮水</td><td>€5</td><td class="num">18</td><td class="num">90</td><td class="num">630</td></tr>
-      <tr class="subtotal"><td>餐饮合计 7人</td><td>€40/天</td><td class="num">18</td><td class="num">720</td><td class="num">5,040</td></tr>
-      <tr style="background:transparent; height:12px;"></tr>
-      <tr><td>景点门票（各城合计）</td><td></td><td></td><td class="num">380</td><td class="num">2,660</td></tr>
-      <tr><td>市内交通（各城合计）</td><td></td><td></td><td class="num">105</td><td class="num">735</td></tr>
+      <tr><th>项目</th><th>预算/人/天</th><th class="num">18天</th></tr>
+      <tr><td>早餐</td><td>€5（面包咖啡或酒店含早）</td><td class="num">€90</td></tr>
+      <tr><td>午餐</td><td>€12（简餐或自带干粮）</td><td class="num">€216</td></tr>
+      <tr><td>晚餐</td><td>€15（餐厅或超市熟食）</td><td class="num">€270</td></tr>
+      <tr><td>零食饮水</td><td>€3</td><td class="num">€54</td></tr>
+      <tr class="subtotal"><td>合计/人</td><td>€35/天</td><td class="num">€630 ≈ ¥4,900</td></tr>
     </table>
+    <div class="tip">
+      <strong>午饭建议：</strong>早上出门前超市买三明治/面包/水果随身带，中午随饿随吃，不用专门找餐厅。欧洲超市（Carrefour City / Coop / Migros）随处可见，€5能买一顿不错的简餐。
+    </div>
   </div>
 
   <div class="card">
-    <h3>📋 签证 + 保险（仅中国出发5人）</h3>
+    <h3>🎫 景点门票 & 🚌 市内交通</h3>
     <table>
-      <tr><td>申根签证费</td><td class="num">€90（¥700）/人</td></tr>
-      <tr><td>签证中心服务费</td><td class="num">¥200/人</td></tr>
-      <tr><td>旅游保险（19天）</td><td class="num">¥250/人</td></tr>
-      <tr class="subtotal"><td>人均</td><td class="num">¥1,150</td></tr>
+      <tr><th>城市</th><th>主要门票</th><th class="num">费用</th></tr>
+      <tr><td>罗马/梵蒂冈</td><td>斗兽场联票+梵蒂冈博物馆+万神殿</td><td class="num">€65</td></tr>
+      <tr><td>佛罗伦萨</td><td>乌菲兹/学院+百花教堂（7/5免费日可省€25）</td><td class="num">€55</td></tr>
+      <tr><td>威尼斯</td><td>总督宫+水上巴士通票</td><td class="num">€50</td></tr>
+      <tr><td>巴塞罗那</td><td>圣家堂+古埃尔公园</td><td class="num">€50</td></tr>
+      <tr><td>巴黎</td><td>铁塔二层+卢浮宫+游船+圣礼拜堂</td><td class="num">€75</td></tr>
+      <tr><td>卢塞恩</td><td>瑞吉山+湖游船+黄金山口快线</td><td class="num">CHF 110 ≈ €115</td></tr>
+      <tr class="subtotal"><td>合计/人</td><td></td><td class="num">€410 ≈ ¥3,200</td></tr>
     </table>
   </div>
 
-  <div class="card" style="background: var(--highlight); border: 2px solid var(--accent2);">
-    <h3>💰 全团总费用汇总（8人）</h3>
+  <div class="card" style="background:var(--highlight); border:2px solid var(--accent2);">
+    <h3>💰 全团总费用汇总</h3>
     <table>
-      <tr><th>组别</th><th class="num">人均</th><th class="num">人数</th><th class="num">小计</th></tr>
-      <tr><td>中国出发（深圳+上海，含签证）</td><td class="num">¥28,500</td><td class="num">5</td><td class="num">¥142,500</td></tr>
-      <tr><td>瑞典出发（无签证）</td><td class="num">¥25,700</td><td class="num">2</td><td class="num">¥51,400</td></tr>
-      <tr><td>第8人（瑞⼠4天+往返）</td><td class="num">¥6,300</td><td class="num">1</td><td class="num">¥6,300</td></tr>
-      <tr class="total"><td>全团总计</td><td></td><td class="num">8人</td><td class="num">¥200,200</td></tr>
+      <tr><th>费用项</th><th class="num">7人全程</th><th class="num">第8人（瑞士段）</th></tr>
+      <tr><td>国际机票</td><td class="num">¥36,000</td><td class="num">¥1,000</td></tr>
+      <tr><td>内陆交通</td><td class="num">¥23,800</td><td class="num">¥200</td></tr>
+      <tr><td>住宿</td><td class="num">¥57,300</td><td class="num">¥2,000</td></tr>
+      <tr><td>餐饮</td><td class="num">¥34,300</td><td class="num">¥1,800</td></tr>
+      <tr><td>景点</td><td class="num">¥22,400</td><td class="num">¥900</td></tr>
+      <tr><td>签证+保险（5人中国出发）</td><td class="num">¥5,750</td><td class="num">—</td></tr>
+      <tr><td>SIM卡+杂项/人</td><td class="num">¥6,650</td><td class="num">¥200</td></tr>
+      <tr class="total"><td>合计</td><td class="num">¥186,200</td><td class="num">¥6,100</td></tr>
+      <tr class="total"><td>全团总计 8人</td><td colspan="2" class="num" style="font-size:20px;">≈ ¥192,000</td></tr>
+      <tr><td>人均（中国出发）</td><td colspan="2" class="num">≈ ¥28,000</td></tr>
+      <tr><td>人均（瑞典出发）</td><td colspan="2" class="num">≈ ¥26,800</td></tr>
     </table>
-    <div class="tip" style="margin-top:12px; background:transparent; border-left-color: var(--accent2);">
-      💡 如用Airbnb厨房自己做早餐和部分晚餐，每人可再省约 €200（¥1,600），全团省 ¥12,800。<br>
-      💡 廉航不托运，每人限登机箱+背包，每程省€30-60。
+    <div class="good" style="margin-top:12px; background:transparent; border-left-color:var(--accent2);">
+      💡 比上一版省了约 ¥12,000（少了尼斯住宿+2段廉航+2段市内交通）。如果米兰入境再省机票 ¥5,000-7,500（中国出发人均省 ¥600-800）。
     </div>
   </div>
 </section>
@@ -627,136 +568,150 @@
   <h2>出行贴士</h2>
 
   <div class="card">
-    <h3>👴 老人出行注意事项</h3>
+    <h3>👴 老人出行</h3>
     <ul style="padding-left:20px;">
-      <li>欧洲7月炎热（罗马、尼斯可达35°C），带好防晒霜、宽檐帽、墨镜</li>
-      <li>每天安排12:00-15:00午休，避开最热时段</li>
-      <li>欧洲老城多石板路，务必穿防滑舒适步行鞋（别穿新鞋！）</li>
-      <li>每个城市选1-2个核心景点深度逛，其余外观打卡即可</li>
-      <li>带常备药品（降压药、心脏药等）+ 欧洲医疗卡EHIC（瑞典居民）</li>
-      <li>随身带酒店名片/地址卡片，以防走散</li>
+      <li>欧洲7月热（罗马35°C+），带防晒霜、宽檐帽、墨镜</li>
+      <li>每天12:00-15:00安排午休避暑，重要景点上午去</li>
+      <li>老城石板路多，穿防滑舒适步行鞋，别穿新鞋</li>
+      <li>带常备药品（降压药、心脏药等），瑞典居民带 EHIC 卡</li>
+      <li>随身带酒店名片，以防走散</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>💳 省钱建议</h3>
+    <h3>⚠️ 安全提醒——罗马/巴黎/巴塞罗那"三大贼窝"</h3>
     <ul style="padding-left:20px;">
-      <li><strong>机票：</strong>现在开始关注Skyscanner/Google Flights，提前3-4个月订最便宜</li>
-      <li><strong>住宿：</strong>全部订Airbnb整套公寓，2套住7人，人均每晚¥400左右</li>
-      <li><strong>餐饮：</strong>早晚餐在公寓做，意大利/法国超市便宜又新鲜，午餐在外吃</li>
-      <li><strong>廉航行李：</strong>每人限1个登机箱+背包，不买托运行李</li>
-      <li><strong>通票考虑：</strong>中国出发5人可考虑Eurail意大利-法国-瑞士4日通票（约€250），如果火车多于飞机则划算</li>
-      <li><strong>门票预约：</strong>所有大景点提前网上预约，省钱又省排队</li>
+      <li>护照、大额现金放酒店保险箱，出门只带当日需要的钱</li>
+      <li>手机别放桌上（会被顺手牵羊），别挂脖子上（会被抢）</li>
+      <li>双肩包背前面，地铁上尤其注意</li>
+      <li>遇到主动帮忙/签名的，一律拒绝（经典分散注意力套路）</li>
+      <li>酒店选景点步行范围内，避免深夜走偏僻路</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>📱 实用准备</h3>
+    <h3>✈️ 廉航避坑指南</h3>
     <ul style="padding-left:20px;">
-      <li><strong>SIM卡：</strong>淘宝提前买欧洲通用卡（20GB约¥150），落地即用</li>
-      <li><strong>支付：</strong>带2张Visa/Mastercard + 少量欧元现金（人均€200即可）</li>
-      <li><strong>A</strong>Google Maps、Google Translate、WhatsApp（群聊）、Omio（交通订票）</li>
-      <li><strong>瑞士：</strong>物价约为意大利2倍，在法国多采购零食带入瑞士</li>
-      <li><strong>申根签证：</strong>申请意大利签证（首入国+最长停留国），提前2个月办理</li>
-      <li><strong>电源：</strong>带转换插头（意/法/西/瑞都是欧标两圆头）</li>
+      <li><strong>行李：</strong>廉航基础票只含一个背包（40×25×20cm），登机箱要加钱（€20-60）</li>
+      <li><strong>值机：</strong>必须提前在App/官网值机！机场柜台值机收费 €30-55</li>
+      <li><strong>餐食：</strong>没有免费餐食，自己带吃带上飞机</li>
+      <li><strong>机场：</strong>确认是哪个机场！巴黎BVA距市区80km，威尼斯TSF距市区40km，都是坑</li>
+      <li><strong>推荐航司：</strong>Vueling（西班牙）、easyJet（英国）、Transavia（法国/荷兰）</li>
+      <li><strong>建议：</strong>7人出行，如行李多，不如每人加钱买登机箱额度，比托运便宜</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>🗺️ 国家覆盖速览</h3>
-    <table>
-      <tr><td>🇮🇹 意大利</td><td>罗马、佛罗伦萨、比萨</td><td>第1-7天</td></tr>
-      <tr><td>🇻🇦 梵蒂冈</td><td>梵蒂冈博物馆、圣彼得大教堂</td><td>第2天</td></tr>
-      <tr><td>🇫🇷 法国</td><td>尼斯、巴黎</td><td>第8-9天、第13-16天</td></tr>
-      <tr><td>🇲🇨 摩纳哥</td><td>亲王宫、蒙特卡洛</td><td>第9天</td></tr>
-      <tr><td>🇨🇭 瑞士</td><td>卢塞恩、瑞吉山、因特拉肯</td><td>第15-19天</td></tr>
-    </table>
+    <h3>🚗 自驾注意事项</h3>
+    <ul style="padding-left:20px;">
+      <li><strong>驾照：</strong>中国驾照需要海牙认证翻译件（Apostille），或国际驾照 IDP。不是普通翻译件！租车公司可能让你租，但遇警察会罚款</li>
+      <li><strong>ZTL禁行区：</strong>意大利几乎所有老城都有ZTL（限制交通区），开进去自动拍照罚款 €80-150。导航不会提示</li>
+      <li><strong>停车：</strong>老城停车 €20-40/天，且车位极小</li>
+      <li><strong>跨境：</strong>意大利→瑞士跨境还车加 €100-200，且需确认租车公司允许</li>
+      <li><strong>结论：</strong>本行程不推荐自驾。火车+廉航完全够用</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>💳 省钱实用清单</h3>
+    <ul style="padding-left:20px;">
+      <li><strong>机票：</strong>现在设 Skyscanner/Google Flights 提醒，提前3-4个月订</li>
+      <li><strong>🆓 7月5日周日：</strong>意大利国立博物馆免费！乌菲兹/学院美术馆/斗兽场都免费（但人会多，早起排队）</li>
+      <li><strong>米兰备选：</strong>中国飞米兰 MXP 通常比飞罗马便宜 ¥600-800/人。如果差价大，米兰入境→高铁1h到卢塞恩→后半程瑞士多玩几天，也是一个思路</li>
+      <li><strong>门票：</strong>所有大景点提前网上预约，免排队</li>
+      <li><strong>支付：</strong>2张 Visa/Mastercard + 少量现金（人均 €200），欧洲刷卡普及率极高</li>
+      <li><strong>瑞士省钱：</strong>瑞士物价是意大利2倍，从巴黎带零食过去</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📱 行前准备</h3>
+    <ul style="padding-left:20px;">
+      <li><strong>SIM卡：</strong>淘宝欧洲通用卡（20GB €15），落地插卡即用</li>
+      <li><strong>A</strong>Google Maps（离线地图）、Omio（交通订票）、Google Translate（拍照翻译菜单）</li>
+      <li><strong>申根签证：</strong>申请意大利签证（首入国+最长停留国），提前2个月</li>
+      <li><strong>电源：</strong>欧标两圆头转换插头（意/法/西/瑞通用）</li>
+      <li><strong>酒店用品：</strong>自备牙膏牙刷拖鞋，欧洲酒店一般不提供</li>
+      <li><strong>清理手机内存：</strong>拍照拍视频，爽！</li>
+    </ul>
   </div>
 </section>
 
 </div>
 
 <script>
-// ===== Leaflet Route Map =====
+// ===== Leaflet Map =====
 (function() {
-  var map = L.map('route-map', { scrollWheelZoom: false }).setView([46.2, 7.5], 5);
+  var map = L.map('route-map', { scrollWheelZoom: false }).setView([45.5, 8], 5.5);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-    maxZoom: 19
+    attribution: '&copy; OSM', maxZoom: 19
   }).addTo(map);
 
   var cities = {
-    stockholm:  { lat: 59.3293, lng: 18.0686, label: '斯德哥尔摩', icon: 'start' },
-    rome:      { lat: 41.9028, lng: 12.4964, label: '罗马 (集合)', icon: 'start' },
-    florence:  { lat: 43.7696, lng: 11.2558, label: '佛罗伦萨', icon: 'city' },
-    pisa:      { lat: 43.7228, lng: 10.3966, label: '比萨', icon: 'side' },
-    nice:      { lat: 43.7102, lng: 7.2620,  label: '尼斯', icon: 'city' },
-    monaco:    { lat: 43.7384, lng: 7.4246,  label: '摩纳哥', icon: 'side' },
-    barcelona: { lat: 41.3874, lng: 2.1686,  label: '巴塞罗那', icon: 'city' },
-    paris:     { lat: 48.8566, lng: 2.3522,  label: '巴黎', icon: 'city' },
-    lucerne:   { lat: 47.0502, lng: 8.3093,  label: '卢塞恩 (解散)', icon: 'end' },
-    zurich:    { lat: 47.3769, lng: 8.5417,  label: '苏黎世', icon: 'end' },
-    milan:     { lat: 45.4642, lng: 9.1900,  label: '米兰 (备选入境)', icon: 'alt' }
+    stockholm:{lat:59.3293,lng:18.0686,label:'斯德哥尔摩',icon:'start'},
+    rome:    {lat:41.9028,lng:12.4964,label:'罗马 (集合)',icon:'start'},
+    florence:{lat:43.7696,lng:11.2558,label:'佛罗伦萨',icon:'city'},
+    pisa:    {lat:43.7228,lng:10.3966,label:'比萨',icon:'side'},
+    cinque:  {lat:44.1282,lng:9.7114,label:'五渔村',icon:'side'},
+    venice:  {lat:45.4408,lng:12.3155,label:'威尼斯',icon:'city'},
+    barcelona:{lat:41.3874,lng:2.1686,label:'巴塞罗那',icon:'city'},
+    paris:   {lat:48.8566,lng:2.3522,label:'巴黎',icon:'city'},
+    lucerne: {lat:47.0502,lng:8.3093,label:'卢塞恩 (解散)',icon:'end'},
+    zurich:  {lat:47.3769,lng:8.5417,label:'苏黎世',icon:'end'},
+    milan:   {lat:45.4642,lng:9.1900,label:'米兰 (备选)',icon:'alt'}
   };
 
-  var colors = { fly: '#1a56db', rail: '#d97706', drive: '#7c3aed' };
-
   function iconHtml(icon) {
-    var mapIcon = { start: '#2e5c4e', city: '#2e5c4e', end: '#b8860b', side: '#6b5e4a', alt: '#9333ea' };
-    var c = mapIcon[icon] || '#2e5c4e';
-    return '<div style="background:'+c+';width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>';
+    var m = {start:'#2e5c4e',city:'#2e5c4e',end:'#b8860b',side:'#6b5e4a',alt:'#9333ea'};
+    var c = m[icon]||'#2e5c4e';
+    return '<div style="background:'+c+';width:12px;height:12px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);"></div>';
   }
 
-  Object.keys(cities).forEach(function(k) {
+  Object.keys(cities).forEach(function(k){
     var c = cities[k];
-    var m = L.marker([c.lat, c.lng], { icon: L.divIcon({ html: iconHtml(c.icon), className: '', iconSize: [14,14], iconAnchor: [7,7] }) }).addTo(map);
-    m.bindTooltip(c.label, { direction: 'top', offset: [0, -8], className: 'map-tooltip' });
+    var mkr = L.marker([c.lat,c.lng],{icon:L.divIcon({html:iconHtml(c.icon),className:'',iconSize:[12,12],iconAnchor:[6,6]})}).addTo(map);
+    mkr.bindTooltip(c.label,{direction:'top',offset:[0,-6]});
   });
 
-  // Routes: [from, to, type]
   var routes = [
-    ['rome','florence','rail'],
-    ['florence','pisa','rail'], ['pisa','florence','rail'],
-    ['florence','nice','fly'],
-    ['nice','monaco','rail'], ['monaco','nice','rail'],
-    ['nice','paris','fly'],
-    ['paris','lucerne','rail'],
-    ['lucerne','zurich','rail'],
-    ['stockholm','rome','fly'],
-    ['stockholm','zurich','fly'],
-    ['milan','lucerne','drive']
+    ['rome','florence','rail'],['florence','pisa','rail'],['pisa','cinque','rail'],
+    ['cinque','florence','rail'],['florence','venice','rail'],
+    ['venice','barcelona','fly'],['barcelona','paris','fly'],
+    ['paris','lucerne','rail'],['lucerne','zurich','rail'],
+    ['stockholm','rome','fly'],['stockholm','zurich','fly'],
+    ['milan','lucerne','rail']
   ];
 
-  routes.forEach(function(r) {
-    var f = cities[r[0]], t = cities[r[1]];
-    if (!f || !t) return;
-    var style = { color: colors[r[2]] || '#1a56db', weight: r[2]==='fly'?2:3, opacity: 0.7, dashArray: r[2]==='fly'?'6 6':null };
-    L.polyline([[f.lat,f.lng],[t.lat,t.lng]], style).addTo(map);
+  routes.forEach(function(r){
+    var f=cities[r[0]], t=cities[r[1]];
+    if(!f||!t) return;
+    L.polyline([[f.lat,f.lng],[t.lat,t.lng]],{
+      color:r[2]==='fly'?'#1a56db':'#d97706',
+      weight:r[2]==='fly'?2:3,
+      opacity:0.6,
+      dashArray:r[2]==='fly'?'6 6':null
+    }).addTo(map);
   });
 })();
 
 // ===== Nav =====
-document.querySelectorAll('nav a').forEach(a => {
-  a.addEventListener('click', function() {
-    document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+document.querySelectorAll('nav a').forEach(a=>{
+  a.addEventListener('click',function(){
+    document.querySelectorAll('nav a').forEach(x=>x.classList.remove('active'));
     this.classList.add('active');
   });
 });
-
-// Intersection observer
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('nav a');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const id = e.target.id || e.target.querySelector('[id]')?.id;
-      navLinks.forEach(a => a.classList.remove('active'));
-      const match = document.querySelector(`nav a[href="#${id}"]`);
-      if (match) match.classList.add('active');
+var sections=document.querySelectorAll('section'), navLinks=document.querySelectorAll('nav a');
+var observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('active'));
+      var m=document.querySelector('nav a[href="#'+e.target.id+'"]');
+      if(m) m.classList.add('active');
     }
   });
-}, { threshold: 0.3 });
-sections.forEach(s => { if (s.id) observer.observe(s); });
+},{threshold:0.3});
+sections.forEach(s=>{if(s.id) observer.observe(s);});
 </script>
 
 </body>
