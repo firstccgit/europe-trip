@@ -51,6 +51,11 @@
   .info { background:#f0fdf4; border-left:3px solid #16a34a; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
   .warn { background:#fff5f5; border-left:3px solid #dc2626; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
   .win { background:#e8f5e9; }
+	  .country-bar { display:flex; height:28px; border-radius:6px; overflow:hidden; margin-top:12px; font-size:12px; font-weight:600; }
+	  .country-bar .es { background:#f4a460; color:#fff; display:flex; align-items:center; justify-content:center; }
+	  .country-bar .it { background:#2e7d32; color:#fff; display:flex; align-items:center; justify-content:center; }
+	  .country-bar .ch { background:#c62828; color:#fff; display:flex; align-items:center; justify-content:center; }
+	  .country-legend { display:flex; gap:16px; margin-top:8px; font-size:13px; }
   @media (max-width:640px) { .container { padding:20px 12px 60px; } h1 { font-size:22px; } .grid { grid-template-columns:repeat(2,1fr); } table { font-size:12px; } td,th { padding:6px 8px; } }
   @media print { nav { display:none; } .card { break-inside:avoid; box-shadow:none; } body { background:#fff; } }
 </style>
@@ -103,6 +108,11 @@
       <span class="tag transport">瑞士境内 🚗租车×2</span>
     </div>
   </div>
+	    <div class="country-bar">
+	      <div class="es" style="width:12.5%;">🇪🇸 西班牙 2晚</div>
+	      <div class="it" style="width:62.5%;">🇮🇹 意大利 10晚</div>
+	      <div class="ch" style="width:25%;">🇨🇭 瑞士 4晚</div>
+	    </div>
 
   <div class="card">
     <h3>👥 人员安排</h3>
@@ -366,7 +376,7 @@
       <tr><td>苏黎世 → 深圳/新加坡（1人）</td><td class="num">¥4,500</td></tr>
       <tr style="height:8px;"></tr>
       <tr><td>巴塞罗那→罗马 廉航</td><td class="num">€55 ≈ ¥440</td></tr>
-          <tr><td>廉航托运行李（7人3-4件，人均分摊）</td><td class="num">约 ¥150</td></tr>
+          <tr><td>廉航托运行李（1件/人，网上提前买 €25-35）</td><td class="num">约 ¥240</td></tr>
       <tr><td>欧洲内陆火车（意大利+多洛米蒂→卢塞恩）</td><td class="num">€225 ≈ ¥1,800</td></tr>
       <tr><td>瑞士租车（3天，人均 CHF 204）</td><td class="num">≈ ¥1,640</td></tr>
           <tr><td>机场接送（BCN包车€84 + FCO包车€67，8人均摊）</td><td class="num">约 ¥150</td></tr>
@@ -380,8 +390,8 @@
 
   <div class="card" style="background:var(--highlight); border:2px solid var(--accent2);">
     <h3>💰 人均费用</h3>
-    <div style="font-size:40px; font-weight:800; color:var(--accent2); text-align:center; padding:20px;">≈ ¥25,800</div>
-    <p style="text-align:center; color:var(--muted);">中国出发含签证 · 瑞典出发约 ¥22,800</p>
+    <div style="font-size:40px; font-weight:800; color:var(--accent2); text-align:center; padding:20px;">≈ ¥25,900</div>
+    <p style="text-align:center; color:var(--muted);">中国出发含签证 · 瑞典出发约 ¥22,900</p>
     <div class="info" style="margin-top:8px;">
       4国7城17天：高迪建筑→文艺复兴→多洛米蒂秘境→瑞士湖山自驾。餐饮预算升级到 €48/天（含意大利coperto桌布费），每个城市安排了标志性大餐（海鲜饭、牛排、奶酪火锅等），吃得开心。
     </div>
