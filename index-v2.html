@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欧洲旅行计划 v2 · 2026.6.29 - 7.15</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root { --bg:#f5f3ef; --card:#fff; --text:#2c2416; --muted:#6b5e4a; --accent:#b8860b; --accent2:#2e5c4e; --border:#e0d9cc; --tag-bg:#f0ebe0; --highlight:#fdf6e3; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+  nav { position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); background:rgba(245,243,239,0.92); border-bottom:1px solid var(--border); padding:0 24px; display:flex; gap:24px; overflow-x:auto; }
+  nav a { text-decoration:none; color:var(--muted); font-size:14px; font-weight:500; padding:12px 4px; white-space:nowrap; border-bottom:2px solid transparent; transition:.15s; }
+  nav a:hover, nav a.active { color:var(--accent); border-color:var(--accent); }
+  .container { max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  section { margin-bottom:56px; }
+  h1 { font-size:28px; font-weight:700; }
+  h2 { font-size:20px; font-weight:700; margin-bottom:20px; color:var(--accent2); }
+  h3 { font-size:16px; font-weight:600; margin-bottom:6px; }
+  .subtitle { color:var(--muted); font-size:15px; margin-top:4px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:16px; }
+  .card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.05); }
+  .tl { position:relative; padding-left:40px; }
+  .tl::before { content:''; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:var(--border); }
+  .tl-item { position:relative; margin-bottom:24px; }
+  .tl-dot { position:absolute; left:-31px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); }
+  .tl-date { font-size:13px; color:var(--accent); font-weight:600; margin-bottom:2px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .tag { font-size:12px; padding:2px 10px; border-radius:20px; background:var(--tag-bg); color:var(--muted); }
+  .tag.transport { background:#e3f0fd; color:#1a56db; }
+  .tag.highlight { background:#fef3c7; color:#92400e; }
+  .tag.rest { background:#e8f5e9; color:#2e7d32; }
+  .tag.join { background:#ede9fe; color:#7c3aed; }
+  .tag.food { background:#fce7f3; color:#be185d; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; padding:8px 12px; border-bottom:2px solid var(--border); }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr.subtotal td { font-weight:700; border-top:2px solid var(--accent); background:var(--highlight); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
+  .stat { text-align:center; padding:20px; }
+  .stat .num-big { font-size:32px; font-weight:800; color:var(--accent2); }
+  .stat .label { font-size:13px; color:var(--muted); margin-top:4px; }
+  #map { height:440px; border-radius:12px; border:1px solid var(--border); margin-bottom:16px; z-index:1; }
+  .route-flow { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:14px; font-weight:600; padding:16px 0; overflow-x:auto; }
+  .route-node { padding:6px 14px; border-radius:8px; white-space:nowrap; background:var(--card); border:1px solid var(--border); }
+  .route-arrow { color:var(--accent); font-size:18px; }
+  .route-nights { font-size:11px; color:var(--muted); display:block; }
+  .tip { background:#fef9e7; border-left:3px solid var(--accent); padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .info { background:#f0fdf4; border-left:3px solid #16a34a; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .warn { background:#fff5f5; border-left:3px solid #dc2626; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
+  .win { background:#e8f5e9; }
+  .country-bar { display:flex; height:28px; border-radius:6px; overflow:hidden; margin-top:12px; font-size:12px; font-weight:600; }
+  .country-bar .es { background:#f4a460; color:#fff; display:flex; align-items:center; justify-content:center; }
+  .country-bar .it { background:#2e7d32; color:#fff; display:flex; align-items:center; justify-content:center; }
+  .country-bar .ch { background:#c62828; color:#fff; display:flex; align-items:center; justify-content:center; }
+  .country-legend { display:flex; gap:16px; margin-top:8px; font-size:13px; }
+  @media (max-width:640px) { .container { padding:20px 12px 60px; } h1 { font-size:22px; } .grid { grid-template-columns:repeat(2,1fr); } table { font-size:12px; } td,th { padding:6px 8px; } }
+  @media print { nav { display:none; } .card { break-inside:avoid; box-shadow:none; } body { background:#fff; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#overview" class="active">概览</a>
+  <a href="#route">路线地图</a>
+  <a href="#itinerary">每日行程</a>
+  <a href="#car">瑞士租车 vs 火车</a>
+  <a href="#budget">费用预算</a>
+  <a href="#dolomites">多洛米蒂 vs 瑞士</a>
+  <a href="#tips">出行贴士</a>
+</nav>
+
+<div class="container">
+
+<!-- ========== OVERVIEW ========== -->
+<section id="overview">
+  <h1>🗺️ 欧洲旅行计划 <span style="font-size:14px;color:var(--accent);font-weight:500;">v2</span></h1>
+  <p class="subtitle">2026年6月29日（周一）— 7月15日（周三）· 17天16晚 · 西班牙→意大利→多洛米蒂→瑞士</p>
+
+  <div style="margin-top:8px;font-size:13px;color:var(--muted);">
+    v2 更新：巴塞罗那扩至3晚（更从容）· 多洛米蒂→卢塞恩改为包车直达5h · 罗马精简至2晚（避暑）· 瑞士停车预算上调
+    · <a href="index.html" style="color:var(--accent);">返回 v1 原版</a>
+  </div>
+
+  <div class="grid" style="margin-top:24px;">
+    <div class="card stat"><div class="num-big">8</div><div class="label">总人数（7/10起8人）</div></div>
+    <div class="card stat"><div class="num-big">4</div><div class="label">国家（西+意+梵+瑞）</div></div>
+    <div class="card stat"><div class="num-big">7</div><div class="label">城市/地区</div></div>
+    <div class="card stat"><div class="num-big">17</div><div class="label">天数</div></div>
+    <div class="card stat"><div class="num-big">¥2.7万</div><div class="label">人均费用</div></div>
+    <div class="card stat"><div class="num-big">🌍</div><div class="label">巴塞罗那进 · 苏黎世出</div></div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>路线一览</h3>
+    <div class="route-flow">
+      <div class="route-node">🇪🇸 巴塞罗那<span class="route-nights">3晚 6/29-7/1</span></div><span class="route-arrow">✈️</span>
+      <div class="route-node">🇮🇹 罗马<span class="route-nights">2晚 7/2-3</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇮🇹 佛罗伦萨<span class="route-nights">3晚 7/4-6</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🇮🇹 威尼斯<span class="route-nights">2晚 7/7-8</span></div><span class="route-arrow">→</span>
+      <div class="route-node" style="border:2px solid #7c3aed;">⛰️ 多洛米蒂<span class="route-nights">2晚 7/9-10</span></div><span class="route-arrow">🚐</span>
+      <div class="route-node">🇨🇭 卢塞恩<span class="route-nights">2晚 7/11-12</span></div><span class="route-arrow">→</span>
+      <div class="route-node">🏔️ 因特拉肯<span class="route-nights">2晚 7/13-14</span></div>
+    </div>
+    <div class="tags">
+      <span class="tag transport">巴塞罗那→罗马 ✈️廉航1.5h</span>
+      <span class="tag transport">罗马→佛罗伦萨 高铁1.5h</span>
+      <span class="tag transport">佛罗伦萨→威尼斯 高铁2h</span>
+      <span class="tag transport">威尼斯→多洛米蒂 火车2.5h</span>
+      <span class="tag transport" style="background:#ede9fe;color:#7c3aed;">多洛米蒂→卢塞恩 🚐包车直达5h</span>
+      <span class="tag transport">瑞士境内 🚗租车×2</span>
+    </div>
+  </div>
+  <div class="country-bar">
+    <div class="es" style="width:18.75%;">🇪🇸 西班牙 3晚</div>
+    <div class="it" style="width:56.25%;">🇮🇹 意大利 9晚</div>
+    <div class="ch" style="width:25%;">🇨🇭 瑞士 4晚</div>
+  </div>
+
+  <div class="card">
+    <h3>👥 人员安排</h3>
+    <table>
+      <tr><td>深圳出发</td><td>3人</td><td>✈️ 深圳 → 巴塞罗那 BCN · <strong>6月29日出发（直飞）</strong></td></tr>
+      <tr><td>上海出发</td><td>2人</td><td>✈️ 上海 → 巴塞罗那 BCN · 6月29日到达</td></tr>
+      <tr><td>瑞典出发</td><td>2人</td><td>✈️ 斯德哥尔摩 → 巴塞罗那 BCN · 6月29日到达</td></tr>
+      <tr><td style="background:#f5f3ff">瑞典（第8人）</td><td style="background:#f5f3ff">1人</td><td style="background:#f5f3ff">✈️ 斯德哥尔摩 → 米兰 MXP · <strong>7月10日加入多洛米蒂段</strong></td></tr>
+      <tr><td colspan="3" style="font-size:13px;color:var(--muted);">第8人7/10飞米兰后FlixBus直达博尔扎诺4.5h，下午汇合 · 7/15 苏黎世解散：7人 → 斯德哥尔摩 | 1人 → 深圳/新加坡</td></tr>
+    </table>
+    <div class="info" style="margin-top:8px;">
+      <strong>第8人多洛米蒂汇合：</strong>7人走巴塞罗那→罗马→佛罗伦萨→威尼斯，7/9抵达多洛米蒂。第8人7/10飞米兰MXP，FlixBus直达博尔扎诺，下午与大部队会师。汇合后8人一起：多洛米蒂 → 包车直达卢塞恩 → 瑞士自驾 → 苏黎世解散。
+    </div>
+  </div>
+</section>
+
+<!-- ========== ROUTE MAP ========== -->
+<section id="route">
+  <h2>路线地图</h2>
+  <div id="map"></div>
+  <div style="font-size:13px;color:var(--muted);text-align:center;">蓝虚线=航班 · 橙实线=火车 · 紫虚线=包车/第8人汇入 · 🍽️=推荐大餐城市</div>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>📍 各段交通</h3>
+    <table>
+      <tr><th>路段</th><th>方式</th><th>时间</th><th>费用/人</th></tr>
+      <tr><td>巴塞罗那 → 罗马</td><td>✈️ 廉航（伏林/瑞安）</td><td>1.5h</td><td>€40-70</td></tr>
+      <tr><td>罗马 → 佛罗伦萨</td><td>🚄 高铁</td><td>1.5h</td><td>€55</td></tr>
+      <tr><td>佛罗伦萨 → 比萨+五渔村 往返</td><td>🚄 火车</td><td>全天</td><td>€30</td></tr>
+      <tr><td>佛罗伦萨 → 威尼斯</td><td>🚄 高铁</td><td>2h</td><td>€45</td></tr>
+      <tr><td>威尼斯 → 多洛米蒂（博尔扎诺）</td><td>🚄 火车</td><td>2.5h</td><td>€25</td></tr>
+      <tr><td style="background:#f5f3ff">第8人：斯德哥尔摩 → 米兰 → 博尔扎诺（7/10）</td><td style="background:#f5f3ff">✈️ + 🚌</td><td style="background:#f5f3ff">3h飞+4.5h巴士</td><td style="background:#f5f3ff">€105</td></tr>
+      <tr style="background:#fef9e7;"><td><strong>🚐 多洛米蒂 → 卢塞恩（推荐包车）</strong></td><td><strong>🚐 8人包车直达</strong></td><td><strong>~5h 门到门</strong></td><td><strong>€150-175</strong></td></tr>
+      <tr><td style="color:var(--muted);font-size:13px;" colspan="4">💡 Daytrip.com 博尔扎诺→卢塞恩 8人minibus €1150-1400/车（人均€144-175）。火车备选：经米兰转车7-8h，€70/人。包车贵€80/人但省2-3h+免米兰换乘+门到门。旺季提前2-4周订。</td></tr>
+      <tr><td>瑞士境内（卢塞恩↔因特拉肯等）</td><td>🚗 租车 ×2</td><td>—</td><td>见租车对比</td></tr>
+      <tr><td>因特拉肯 → 苏黎世机场</td><td>🚗 开车</td><td>1.5h</td><td>含在租车</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>⛰️ 多洛米蒂交通：公交便利，不需租车</h3>
+    <p><strong>Südtirol Mobil</strong> 公交网络覆盖全境。博尔扎诺→Val Gardena 巴士350路频繁（€5/次）。住 Ortisei/Santa Cristina 的酒店<strong>免费送 Mobil Card</strong>，无限次公交+区域火车。缆车上山点（Seceda、Alpe di Siusi）镇中心步行即达。</p>
+    <div class="info">✅ 多洛米蒂不需要租车。酒店免费 Mobil Card 覆盖所有移动，山区停车不便且收费。缆车另付 €20-30/次。</div>
+  </div>
+
+  <div class="card">
+    <h3>🚐 机场接送：8人包车 vs 公共交通</h3>
+    <table>
+      <tr><th>机场 → 市区</th><th>公共交通（8人总）</th><th>🚐 包车（8人总）</th><th>推荐</th></tr>
+      <tr><td>🇪🇸 巴塞罗那 BCN（14km）</td><td>机场巴士 €5.90×8=€47</td><td><strong>€84</strong> 8座奔驰</td><td>包车省心</td></tr>
+      <tr><td>🇮🇹 罗马 FCO（32km）</td><td>特快列车 €14×8=€112</td><td><strong>€67</strong> 8座minivan</td><td>✅ 包车更便宜</td></tr>
+      <tr><td>🇨🇭 苏黎世 ZRH（12km）</td><td>火车 CHF 6.80×8=CHF 54</td><td>—</td><td>火车10min</td></tr>
+    </table>
+    <div class="info"><strong>💰 罗马FCO包车€67比8人火车票€112还便宜！</strong>巴塞罗那包车€84比大巴只贵€37（人均多€4.6），拖着行李值回票价。苏黎世坐火车10分钟进城不需包车。提前在 Welcome Pickups / Transfeero 预约。</div>
+  </div>
+
+  <div class="card">
+    <h3>西班牙 vs 法国：为什么选巴塞罗那而不是巴黎</h3>
+    <table>
+      <tr><th></th><th class="win">🇪🇸 巴塞罗那（本方案）</th><th>🇫🇷 巴黎</th></tr>
+      <tr><td>飞罗马</td><td class="win">1.5h，廉航 €40-70（航线密）</td><td>2h，廉航 €60-90</td></tr>
+      <tr><td>住宿</td><td class="win">€100/晚，性价比高</td><td>€150+/晚</td></tr>
+      <tr><td>7月气温</td><td>28-30°C，有海风</td><td>25-30°C</td></tr>
+      <tr><td>体验</td><td class="win">高迪建筑（独一无二）+ 地中海海滩 + 海鲜饭</td><td>卢浮宫+铁塔（经典但排队久）</td></tr>
+      <tr><td>节奏</td><td class="win">轻松热情，适合度假开场</td><td>紧凑打卡</td></tr>
+    </table>
+    <div class="info">✅ 巴塞罗那比巴黎便宜约 ¥1,000/人。高迪建筑在地球上不可复制，且巴塞罗那→罗马飞行最短最便宜。地中海开场，阿尔卑斯收尾，风景逻辑清晰。v2 升级至3晚，多一天享受海滩+Montjuïc。</div>
+  </div>
+</section>
+
+<!-- ========== ITINERARY ========== -->
+<section id="itinerary">
+  <h2>每日行程</h2>
+
+  <div class="tl">
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第1天 · 6月29日 周一</div>
+      <div class="card"><h3>📍 巴塞罗那集合 🇪🇸</h3>
+        <p>各队飞抵巴塞罗那 BCN。深圳6/29早班机直飞→巴塞罗那6/29下午到（时差-6h）。瑞典2人飞行3.5h，中午即到。</p>
+        <p><strong>傍晚：</strong>哥特区 Gothic Quarter 漫步 → 巴塞罗那主教堂 → 兰布拉大道 La Rambla → 波盖利亚市场（果汁+火腿小吃 €5-10）</p>
+        <p><strong>晚餐：</strong>哥特区小巷里的 Tapas 馆子，人均 €15-20 吃得丰盛</p>
+        <div class="tags"><span class="tag">集合日</span><span class="tag rest">倒时差</span><span class="tag food">🍽️ Tapas</span></div>
+        <div class="tip">⚠️ 兰布拉大道人多，注意扒手！背包背前面。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第2天 · 6月30日 周二</div>
+      <div class="card"><h3>⛪ 圣家堂 + 🦎 桂尔公园 + 🏖️ 海滩</h3>
+        <p><strong>上午：</strong>圣家堂 Sagrada Família（€26，<strong>提前至少1个月预约！</strong>）高迪巅峰之作，内部光影绝美</p><p><strong>下午：</strong>桂尔公园 Park Güell（€10）→ 巴塞罗内塔海滩 Barceloneta 踩水</p><p><strong>晚餐：</strong>🦞 海边正宗的 Paella 海鲜饭 + Sangria 水果酒，人均 €25-30</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag rest">海滩放松</span><span class="tag food">🍽️ 海鲜饭大餐</span></div>
+        <div class="tip">⚠️ 圣家堂务必提前网上预约！暑期票紧张。建议早上9:00场，人最少。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第3天 · 7月1日 周三</div>
+      <div class="card"><h3>🏰 蒙锥克山 + 🏖️ 海滩放松</h3>
+        <p><strong>上午：</strong>蒙锥克城堡 Montjuïc Castle（€5，俯瞰全城+海港全景）→ 奥林匹克公园（1992奥运主场馆外观免费）</p><p><strong>下午：</strong>回到哥特区逛小店 → 毕加索博物馆（€12）或再去海滩躺平</p><p><strong>晚餐：</strong>El Born 区时尚小馆 Cal Pep 或类似，海鲜 Tapas 吃到撑 €25-30</p>
+        <div class="tags"><span class="tag rest">轻松日</span><span class="tag food">🍽️ 西班牙告别宴</span></div>
+        <div class="info"><strong>v2 新增第3天：</strong>告别赶场节奏，蒙锥克魔幻喷泉+城堡360°全景，下午自由逛街买手信。巴塞罗那3晚比2晚从容太多，不在第一天到第二天就飞。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第4天 · 7月2日 周四</div>
+      <div class="card"><h3>🏛️ 米拉之家 → ✈️ 飞罗马</h3>
+        <p><strong>上午：</strong>米拉之家 Casa Milà（€25，高迪最后一座民用建筑，天台外星人烟囱拍照）</p><p><strong>下午：</strong>伏林/瑞安廉航→罗马（1.5h，€40-70），傍晚到罗马住处</p><p><strong>晚餐：</strong>Trastevere 区地道罗马小馆，Cacio e Pepe 奶酪胡椒意面 €12-15</p>
+        <div class="tags"><span class="tag transport">移动日</span><span class="tag highlight">⭐ 高迪收官</span><span class="tag food">🍽️ 罗马家常菜</span></div>
+        <div class="info"><strong>巴塞罗那→罗马航班密集：</strong>Vueling/Ryanair每天多班，选16:00前后航班，上午看完米拉之家不赶。伏林Basic票只含40×20×30cm小包，登机箱需买Optima票或加购行李（网上提前买€25-35）。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第5天 · 7月3日 周五</div>
+      <div class="card"><h3>🇻🇦 梵蒂冈全天</h3>
+        <p><strong>上午：</strong>梵蒂冈博物馆+西斯廷礼拜堂（提前预约 €22）</p><p><strong>下午：</strong>圣彼得大教堂（免费）、穹顶登顶 €10、圣天使城堡外观。罗马7月炎热，中午在大教堂内避暑。</p><p><strong>晚餐：</strong>Prati 区 Carbonara 培根蛋酱意面 + Saltimbocca 跳嘴肉卷，人均 €20-25</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag food">🍽️ 罗马经典晚餐</span></div>
+        <div class="tip">⚠️ 提前2-4周网上预约！暑期票极其紧张。罗马7月高温35°C+，中午尽量在室内。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第6天 · 7月4日 周六</div>
+      <div class="card"><h3>🏛️ 古罗马 → 🚄 佛罗伦萨</h3>
+        <p><strong>上午：</strong>斗兽场+古罗马广场+帕拉蒂尼山（联票 €18），趁早凉快先去户外遗址。</p><p><strong>下午：</strong>威尼斯广场 → 万神殿 → 许愿池，16:00后高铁→佛罗伦萨（1.5h，€55），傍晚到。</p><p><strong>晚餐：</strong>中央市场二楼美食大厅，各种意面/Pizza/牛肚包自选，人均 €12-20</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag transport">移动日</span></div>
+        <div class="info"><strong>v2调整：</strong>罗马精简至2晚。意大利7月最热的城市就是罗马（35°C+），2天覆盖梵蒂冈+古罗马核心，热度最小化。相比v1少一个午休日但节奏紧凑可行。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第7天 · 7月5日 周日 🔥 免费博物馆日</div>
+      <div class="card"><h3>🎨 乌菲兹美术馆 + 学院美术馆 🆓</h3>
+        <p>🔥 7/5周日，意大利国立博物馆<strong>免费</strong>！早起排队：乌菲兹美术馆（波提切利《维纳斯的诞生》）+ 学院美术馆（米开朗基罗《大卫像》），一天薅完文艺复兴精髓。</p><p>下午米开朗基罗广场全景。</p><p><strong>晚餐：</strong>🥩 Bistecca alla Fiorentina 佛罗伦萨大牛排（1kg起，2-3人分，人均 €35-40）——此行最贵最好的一顿肉</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag" style="background:#dcfce7;color:#16a34a;">🔥 免费日</span><span class="tag food">🍽️ T骨牛排大餐</span></div>
+        <div class="warn">⚠️ 免费日排队人多！建议7:30前到乌菲兹门口排队，下午再去学院美术馆。前一晚已到佛罗伦萨，早上可就近出发。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第8天 · 7月6日 周一</div>
+      <div class="card"><h3>🗼 比萨 + 🌊 五渔村 一日串烧</h3>
+        <p>上午火车1h→比萨斜塔打卡 → 五渔村悬崖彩色渔村、徒步跳村游</p><p><strong>午餐：</strong>五渔村炸海鲜 Cone di Frittura（€8-12，边走边吃）</p><p><strong>晚餐：</strong>佛罗伦萨中央市场牛肚包 Lampredotto（€5-8），或者继续吃顿好的</p>
+        <div class="tags"><span class="tag highlight">⭐ 标志</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第9天 · 7月7日 周二</div>
+      <div class="card"><h3>🚄 佛罗伦萨 → 威尼斯</h3>
+        <p>高铁2h（€45），中午到威尼斯。下午圣马可广场、大教堂（免费）、叹息桥、里亚托桥。傍晚水上巴士游大运河。</p><p><strong>晚餐：</strong>Cicchetti 威尼斯小食（类似Tapas）+ 墨鱼面 Spaghetti al Nero di Seppia，人均 €20-25</p>
+        <div class="tags"><span class="tag transport">移动日</span><span class="tag food">🍽️ 威尼斯海鲜</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第10天 · 7月8日 周三</div>
+      <div class="card"><h3>🛶 威尼斯全天</h3>
+        <p>上午总督宫（€25）→ 下午彩色岛 Burano（水上巴士1h，彩色房子拍照绝美）+ 玻璃岛 Murano</p><p><strong>晚餐：</strong>运河边 Ristorante，海鲜拼盘+蛤蜊意面，人均 €25-30</p>
+        <div class="tags"><span class="tag highlight">⭐ 一生必去</span><span class="tag food">🍽️ 运河晚宴</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第11天 · 7月9日 周四</div>
+      <div class="card"><h3>⛰️ 威尼斯 → 多洛米蒂（7人）</h3>
+        <p>7人火车2.5h北上，中午到博尔扎诺。寄存行李后缆车上 Renon 高地，刀锋山+大草甸。</p><p><strong>晚餐：</strong>🍻 山区啤酒屋，Speck熏火腿拼盘 + Canederli面包丸子 + 本地啤酒，人均 €20-25</p>
+        <div class="tags"><span class="tag transport">移动日</span><span class="tag food">🍽️ 山区特色</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第12天 · 7月10日 周五 👤 第8人汇合</div>
+      <div class="card"><h3>⛰️ 多洛米蒂全天 + 第8人汇合</h3>
+        <p>上午：休斯草甸 Alpe di Siusi（欧洲最大高山草甸）→ 瑟切达 Seceda 缆车登顶。</p><p><strong>第8人：</strong>斯德哥尔摩 ✈️ 米兰 MXP（3h），🚌 FlixBus直达博尔扎诺（4.5h，€22-35），下午与大部队会师！</p><p>下午一起富纳斯山谷 Santa Maddalena 教堂。</p><p><strong>午餐：</strong>山间 Rifugio 小木屋，Polenta玉米糊+炖野味或奶酪焗面 €12-18</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag join">👤 8人全员！</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第13天 · 7月11日 周六</div>
+      <div class="card"><h3>🚐 多洛米蒂 → 卢塞恩 🇨🇭（包车直达）</h3>
+        <p><strong>Daytrip 包车：</strong>博尔扎诺门到门→卢塞恩，约5h直达，免去米兰转车折腾。窗景从石灰岩绝壁渐变为瑞士碧湖绿坡。</p><p>上午出发，下午3-4点到卢塞恩。卡佩尔廊桥+湖边散步。</p><p><strong>晚餐：</strong>🫕 瑞士奶酪火锅 Fondue（CHF 28-35/人），湖边老店 Pfistern 或 Stadtkeller</p>
+        <div class="tags"><span class="tag transport">🚐 包车</span><span class="tag rest">门到门</span><span class="tag food">🍽️ 奶酪火锅</span></div>
+        <div class="info"><strong>🚐 包车 vs 火车：</strong>Daytrip 8人minibus €1150-1400/车（人均€144-175），5h门到门。火车需米兰转车7-8h（人均€70）。包车贵约€80/人但省2-3h+免换乘+直达酒店门口。8人以上包车性价比更高。火车备用方案同价更省。</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第14天 · 7月12日 周日</div>
+      <div class="card"><h3>🏔️ 瑞吉山（Rigi）</h3>
+        <p>卢塞恩码头乘船→维茨瑙→齿轮火车上山（往返CHF 65）。山顶360°阿尔卑斯全景+13个湖泊尽收眼底。</p><p><strong>晚餐：</strong>湖边餐厅 Rösti 薯饼 + Zürcher Geschnetzeltes 苏黎世小牛肉，CHF 30-40</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag rest">老人友好</span><span class="tag food">🍽️ 瑞士经典</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第15天 · 7月13日 周一</div>
+      <div class="card"><h3>🏙️ 卢塞恩老城 + 🚗 取车</h3>
+        <p>上午：狮子纪念碑、穆塞格城墙、老城漫步。下午取2辆车（每车4人），自驾去龙疆湖 Lungernsee 和 布里恩茨湖 Brienzersee 环湖。</p>
+        <div class="tags"><span class="tag transport">🚗 取车</span><span class="tag rest">轻松</span></div>
+        <div class="info"><strong>🚗 2辆5座旅行车：</strong>8人持C1/C2驾照只能开小车（≤5座），不可驾9座van。租2辆旅行车（VW Passat Wagon 或类似），每车4人+行李刚好。龙疆湖边停车务必打票，有人被罚75瑞郎！</div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第16天 · 7月14日 周二</div>
+      <div class="card"><h3>🏔️ 少女峰地区 · 因特拉肯</h3>
+        <p>开车至因特拉肯（1h）。上少女峰观景台 CHF 210/人，可不登顶，改去格林德瓦+劳特布伦嫩悬崖瀑布小镇（免费），或坐缆车上菲斯特 First（CHF 64）走悬崖步道。</p><p><strong>晚餐：</strong>🫕 Raclette 烤奶酪 + 瑞士葡萄酒，CHF 30-35</p>
+        <div class="tags"><span class="tag highlight">⭐ 核心</span><span class="tag food">🍽️ Raclette</span></div>
+      </div>
+    </div>
+
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">第17天 · 7月15日 周三</div>
+      <div class="card"><h3>🌊 布里恩茨湖 / 龙疆湖 → 🛫 苏黎世解散</h3>
+        <p>上午布里恩茨湖木船游湖 → 龙疆湖 Lungern（瑞士最蓝湖泊之一）。午后开车1.5h至苏黎世机场 ZRH，机场还车解散。</p>
+        <p>✈️ 7人 → 斯德哥尔摩 ARN | ✈️ 1人 → 深圳 SZX / 新加坡 SIN</p>
+        <div class="tags"><span class="tag rest">轻松</span><span class="tag transport">解散日 ✈️</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========== CAR VS TRAIN ========== -->
+<section id="car">
+  <h2>🚗 瑞士段：8人租2辆车 vs 火车</h2>
+
+  <div class="card">
+    <h3>瑞士3天（7/13-7/15），8人同行，需2辆5座旅行车</h3>
+    <table>
+      <tr><th></th><th>🚗 租两辆5座旅行车</th><th>🚄 火车买票</th></tr>
+      <tr><td>租车/车票</td><td>2辆 × CHF 130/天 × 3天 = CHF 780</td><td>瑞士通票 4天 CHF 295/人 × 8 = CHF 2,360</td></tr>
+      <tr><td>汽油</td><td>CHF 120（双车，柴油省1/3）</td><td>—</td></tr>
+      <tr><td>停车</td><td>CHF 30/天/车 × 3 ≈ CHF 180</td><td>—</td></tr>
+      <tr><td>高速贴纸</td><td>2辆 × CHF 40 = CHF 80（取车时通常已贴）</td><td>—</td></tr>
+      <tr><td>瑞吉山齿轮火车</td><td>仍需 CHF 65/人 × 8 = CHF 520</td><td>通票半价 CHF 32.5/人 = CHF 260</td></tr>
+      <tr><td>因特拉肯/少女峰缆车</td><td>自选 CHF 64-210/人</td><td>通票75折</td></tr>
+      <tr class="subtotal"><td>基础合计</td><td><strong>CHF 1,680 ≈ ¥13,500</strong></td><td><strong>CHF 2,620 ≈ ¥21,000</strong></td></tr>
+      <tr><td>人均</td><td><strong>≈ ¥1,690</strong></td><td>≈ ¥2,620</td></tr>
+    </table>
+    <div class="info">
+      <strong>✅ 2辆旅行车3天比8人火车通票省约 ¥7,500（人均省 ¥930）。</strong>驾照只能开≤5座小车，故2辆车是必须的。每车4人+行李刚好，推荐旅行车（VW Passat Wagon / Škoda Octavia Wagon）。中国驾照+海牙认证翻译件（淘宝¥200）即可合法驾驶。停车预算已上调至 CHF 30/天/车（v1原CHF 25，中文攻略实测暑期景区停车更贵）。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>租车实操</h3>
+    <table>
+      <tr><th>项目</th><th>详情</th></tr>
+      <tr><td>车型</td><td>2辆旅行车/中型SUV（VW Passat Wagon、Škoda Octavia Wagon），每车4人+行李。⚠️ 不可租9座van（C照限制）</td></tr>
+      <tr><td>取车点</td><td>卢塞恩市区/火车站 Hertz / Europcar / Sixt</td></tr>
+      <tr><td>还车点</td><td>苏黎世机场 ZRH（同城还车，无异地费）</td></tr>
+      <tr><td>驾照</td><td>中国驾照原件 + 海牙认证翻译件（公证处300元+外事办50元加贴Apostille，淘宝有代办约¥200）</td></tr>
+      <tr><td>驾驶员</td><td>至少2位司机（每车1位），备选1位</td></tr>
+      <tr><td>保险</td><td>建议买全险（CDW+盗窃险），约 CHF 25/天/车</td></tr>
+      <tr><td>停车</td><td>卢塞恩酒店多数含停车，龙疆/因特拉肯景区 CHF 2-4/h。⚠️ 龙疆停车务必打票，忘打被罚CHF 75！白线收费/蓝线免费限时/黄线禁停</td></tr>
+      <tr><td>加油</td><td>柴油 CHF 1.80/L，推荐 Coop 加油站周三会员9折。全程预估油费 CHF 120（双车）</td></tr>
+      <tr><td>高速</td><td>瑞士高速年票 CHF 40/车，取车时通常已贴好（确认！）</td></tr>
+    </table>
+    <div class="warn">
+      <strong>⚠️ 瑞士驾驶注意事项：</strong>隧道必须开灯（罚CHF 200）· 右转必须等绿灯 · 村镇限速50/部分30 · 红色菱形标志让行 · 山区提前下载离线地图 · 车队微信群共享位置。
+    </div>
+  </div>
+</section>
+
+<!-- ========== BUDGET ========== -->
+<section id="budget">
+  <h2>费用预算（人均）</h2>
+
+  <div class="card">
+    <table>
+      <tr><th>项目</th><th class="num">费用</th></tr>
+      <tr><td>中国 → 巴塞罗那（深圳/上海）</td><td class="num">¥3,500</td></tr>
+      <tr><td>斯德哥尔摩 → 巴塞罗那（瑞典2人）</td><td class="num">¥800</td></tr>
+      <tr><td>斯德哥尔摩 → 米兰（第8人，含火车至博尔扎诺）</td><td class="num">¥1,000</td></tr>
+      <tr><td>苏黎世 → 斯德哥尔摩（7人）</td><td class="num">¥1,200</td></tr>
+      <tr><td>苏黎世 → 深圳/新加坡（1人）</td><td class="num">¥4,500</td></tr>
+      <tr style="height:8px;"></tr>
+      <tr><td>巴塞罗那→罗马 廉航</td><td class="num">€55 ≈ ¥440</td></tr>
+      <tr><td>廉航托运行李（1件/人，网上提前买 €25-35）</td><td class="num">约 ¥240</td></tr>
+      <tr><td>欧洲内陆火车（罗马→佛罗伦萨→威尼斯→多洛米蒂）</td><td class="num">€155 ≈ ¥1,240</td></tr>
+      <tr style="background:#fef9e7;"><td><strong>🚐 多洛米蒂→卢塞恩 8人包车直达（人均€150-175）</strong></td><td class="num" style="background:#fef9e7;"><strong>≈ ¥1,300</strong></td></tr>
+      <tr><td>瑞士租车（3天，2辆旅行车，人均 CHF 210）</td><td class="num">≈ ¥1,690</td></tr>
+      <tr><td>机场接送（BCN包车€84 + FCO包车€67，8人均摊）</td><td class="num">约 ¥150</td></tr>
+      <tr><td>住宿 16晚</td><td class="num">约 ¥8,500</td></tr>
+      <tr><td>餐饮 17天（€48/天，含大餐+coperto桌布费。瑞士段约€55-65/天、意西段约€35-45/天混搭拉平）</td><td class="num">约 ¥6,500</td></tr>
+      <tr><td>景点门票</td><td class="num">约 ¥2,500</td></tr>
+      <tr><td>申根签证+保险（中国出发5人）</td><td class="num">¥1,150</td></tr>
+      <tr><td>SIM卡+杂项</td><td class="num">约 ¥1,000</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="background:var(--highlight); border:2px solid var(--accent2);">
+    <h3>💰 人均费用</h3>
+    <div style="font-size:40px; font-weight:800; color:var(--accent2); text-align:center; padding:20px;">≈ ¥27,100</div>
+    <p style="text-align:center; color:var(--muted);">中国出发含签证 · 瑞典出发约 ¥24,100</p>
+    <div class="info" style="margin-top:8px;">
+      4国7城17天：高迪建筑→文艺复兴→多洛米蒂秘境→瑞士湖山自驾。v2巴塞罗那3晚更从容，多洛米蒂→卢塞恩包车5h直达（比火车贵约¥640/人但省3h+免换乘）。餐饮€48/天为全行程平均（瑞士段日均€55-65，意大利西班牙段€35-45拉平）。
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>🍽️ 餐食节奏（分段预算）</h3>
+    <table>
+      <tr><th>国家/地区</th><th>天数</th><th>日均餐饮</th><th>策略</th></tr>
+      <tr><td>🇪🇸 西班牙</td><td>3天</td><td>€40-45</td><td>Tapas性价比高，海鲜饭大餐一次 €25-30</td></tr>
+      <tr><td>🇮🇹 意大利城市</td><td>7天</td><td>€40-45</td><td>意面Pizza日常€12-15，大餐€25-40（牛排），免费博物馆日省门票吃好的</td></tr>
+      <tr><td>⛰️ 多洛米蒂</td><td>2天</td><td>€30-35</td><td>Rifugio山间小木屋€12-18，性价比最高</td></tr>
+      <tr><td>🇨🇭 瑞士</td><td>4天</td><td>€55-65</td><td>Fondue/Raclette CHF 28-40一顿，简餐Coop超市CHF 10-15</td></tr>
+      <tr class="subtotal"><td>全行程加权平均</td><td>17天</td><td colspan="2"><strong>约 €48 × 8.0汇率 = ¥384/天 · 瑞士Coop超市熟食是省钱关键</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📊 v1 vs v2 变化对照</h3>
+    <table>
+      <tr><th>项目</th><th>v1 原版</th><th>v2 调整</th><th>变动</th></tr>
+      <tr><td>巴塞罗那</td><td>2晚</td><td>3晚</td><td style="color:#16a34a;">+1晚，更从容</td></tr>
+      <tr><td>罗马</td><td>3晚</td><td>2晚</td><td style="color:#dc2626;">-1晚，避暑精简</td></tr>
+      <tr><td>多洛米蒂→卢塞恩</td><td>火车6h+ €70</td><td>🚐包车5h €150</td><td style="color:#dc2626;">+¥640/人</td></tr>
+      <tr><td>瑞士停车</td><td>CHF 25/天/车</td><td>CHF 30/天/车</td><td style="color:#dc2626;">+¥50/人</td></tr>
+      <tr><td>人均总费用</td><td>¥25,900</td><td>¥27,100</td><td style="color:#dc2626;">+¥1,200</td></tr>
+    </table>
+    <div class="info">v2核心取舍：花钱买时间和舒适度。巴塞罗那加1天+包车直达=多花¥1,200/人，换来不赶路的假期节奏。如果预算敏感，可将包车换回火车（回到€70/人），则总价约¥26,200。</div>
+  </div>
+</section>
+
+<!-- ========== DOLOMITES VS SWITZERLAND ========== -->
+<section id="dolomites">
+  <h2>⛰️ 多洛米蒂 vs 瑞士</h2>
+  <div class="card">
+    <table>
+      <tr><th></th><th>🇮🇹 多洛米蒂</th><th>🇨🇭 瑞士卢塞恩/因特拉肯</th></tr>
+      <tr><td>风景</td><td>刀锋状石灰岩绝壁+高山草甸，野性壮观</td><td>雪山+碧湖+绿坡，精致如明信片</td></tr>
+      <tr><td>海拔</td><td>1500-2500m，草甸为主</td><td>400-3500m，有终年积雪</td></tr>
+      <tr><td>费用</td><td>缆车 €20-30，住宿 €100/晚</td><td>缆车 CHF 65-210，住宿 CHF 150+/晚</td></tr>
+      <tr><td>游客</td><td>欧洲人为主，亚洲游客少</td><td>全球游客，暑期人多</td></tr>
+      <tr><td>玩法</td><td>缆车+徒步，1-2天精华够</td><td>自驾+火车+缆车，4-6天从容</td></tr>
+      <tr><td>美食</td><td>山间Rifugio €12-18，Speck+Canederli</td><td>Fondue/Raclette CHF 28-40，超市熟食CHF 10-15</td></tr>
+    </table>
+    <div class="info">✅ 两个都去——多洛米蒂在威尼斯→瑞士的路上不绕路，风格互补不重复。多洛米蒂是野性前菜，瑞士是精致主菜。v2包车5h从多洛米蒂直达卢塞恩，衔接更顺畅。</div>
+  </div>
+</section>
+
+<!-- ========== TIPS ========== -->
+<section id="tips">
+  <h2>出行贴士</h2>
+  <div class="card"><h3>👴 老人出行</h3>
+    <ul style="padding-left:20px;"><li>巴塞罗那/罗马7月热（30-35°C），多洛米蒂/瑞士凉快（15-25°C）</li><li>罗马7月最热，v2精简至2晚减少暴晒 · 中午躲博物馆或教堂吹冷气</li><li>石板路穿防滑鞋 · 带常备药品 · 随身带酒店名片</li></ul>
+  </div>
+  <div class="card"><h3>⚠️ 安全</h3>
+    <ul style="padding-left:20px;"><li>巴塞罗那兰布拉大道+地铁扒手全欧闻名——背包背前面、手机别放桌上</li><li>护照放酒店保险箱 · 拒绝主动帮忙的陌生人 · 警惕问路/签名骗局</li></ul>
+  </div>
+  <div class="card"><h3>💳 省钱要点</h3>
+    <ul style="padding-left:20px;"><li>机票设 Skyscanner 提醒 · 🔥7/5周日博物馆免费（省€25+）</li><li>巴塞罗那→罗马廉航提前买 €40内搞定 · 行李提前网上加购比机场便宜一半</li><li>大餐安排在中午（Menu del día €12-15）比晚餐便宜一半</li><li>瑞士超市 Coop/Migros 买熟食吃一顿简餐，省下的钱吃Fondue。Coop周三会员日9折加油</li><li>多洛米蒂比瑞士便宜一半 · 瑞士租车比8人通票省</li><li>意铁Italo/Trenitalia提前买常有€19.90特价票</li><li>酒店不提供牙膏牙刷拖鞋，自备</li></ul>
+  </div>
+  <div class="card"><h3>🍽️ 餐厅预订</h3>
+    <ul style="padding-left:20px;"><li>巴塞罗那：海鲜饭推荐 Can Majó（海滩边）或 7 Portes（老牌）· Cal Pep 吃Tapas</li><li>佛罗伦萨：T骨牛排提前1天订位，Trattoria Mario 或 Osteria dell'Osso</li><li>卢塞恩：Fondue推荐 Pfistern（湖边500年老店），提前订靠窗位</li><li>罗马：Trastevere区随便进一家评分4.5+的都不会差</li><li>大部分餐厅Google Maps订座或官网约，旺季提前1-2天</li></ul>
+  </div>
+  <div class="card"><h3>📱 行前准备</h3>
+    <ul style="padding-left:20px;"><li>欧洲SIM卡 ¥150 · 离线地图 · Omio交通App · Google Maps（餐厅评分）</li><li>申根签证：西班牙或意大利（最长停留国），提前2个月</li><li>电源：欧标两圆头 · 欧元+瑞士法郎现金备用（人均€200 + CHF 150）</li><li>海牙认证驾照翻译（开车的人办，公证处+外事办约¥350，淘宝约¥200）</li><li>圣家堂+梵蒂冈博物馆+乌菲兹全部提前预约！</li><li>下载 südtirolmobil App（多洛米蒂公交备用）· MeteoSwiss天气App</li><li>清理手机内存——高迪建筑+多洛米蒂+瑞士湖山+美食，拍爆！</li></ul>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var map=L.map('map',{scrollWheelZoom:false}).setView([44.5,7],5.5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM',maxZoom:19}).addTo(map);
+  var c={
+    stockholm:{lat:59.33,lng:18.07,label:'斯德哥尔摩',icon:'start'},
+    barcelona:{lat:41.39,lng:2.17,label:'巴塞罗那 (6/29集合 · 3晚)',icon:'start'},
+    rome:{lat:41.90,lng:12.50,label:'罗马 (7/2-3 · 2晚)',icon:'city'},
+    florence:{lat:43.77,lng:11.26,label:'佛罗伦萨 (7/4-6)',icon:'city'},
+    pisa:{lat:43.72,lng:10.40,label:'比萨',icon:'side'},
+    cinque:{lat:44.13,lng:9.71,label:'五渔村',icon:'side'},
+    venice:{lat:45.44,lng:12.32,label:'威尼斯 (7/7-8)',icon:'city'},
+    milan:{lat:45.46,lng:9.19,label:'米兰 (第8人中转)',icon:'side'},
+    bolzano:{lat:46.50,lng:11.35,label:'多洛米蒂 (7/9-10 8人汇合)',icon:'city'},
+    lucerne:{lat:47.05,lng:8.31,label:'卢塞恩 (7/11-12)',icon:'city'},
+    interlaken:{lat:46.69,lng:7.85,label:'因特拉肯 (7/13-14)',icon:'city'},
+    zurich:{lat:47.38,lng:8.54,label:'苏黎世 (7/15解散)',icon:'end'}
+  };
+  function h(i){var m={start:'#2e5c4e',city:'#2e5c4e',end:'#b8860b',side:'#6b5e4a'};var cl=m[i]||'#2e5c4e';return '<div style="background:'+cl+';width:12px;height:12px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);"></div>';}
+  Object.keys(c).forEach(function(k){var x=c[k];var m=L.marker([x.lat,x.lng],{icon:L.divIcon({html:h(x.icon),className:'',iconSize:[12,12],iconAnchor:[6,6]})}).addTo(map);m.bindTooltip(x.label,{direction:'top',offset:[0,-6]});});
+  var r=[
+    ['barcelona','rome','fly'],['rome','florence','rail'],['florence','pisa','rail'],['pisa','cinque','rail'],['cinque','florence','rail'],
+    ['florence','venice','rail'],['venice','bolzano','rail'],['bolzano','lucerne','shuttle'],
+    ['lucerne','interlaken','rail'],['interlaken','zurich','rail'],
+    ['stockholm','barcelona','fly'],['stockholm','milan','fly'],['milan','bolzano','rail'],['zurich','stockholm','fly']
+  ];
+  r.forEach(function(x){var f=c[x[0]],t=c[x[1]];if(!f||!t)return;L.polyline([[f.lat,f.lng],[t.lat,t.lng]],{color:x[2]==='fly'?'#1a56db':x[2]==='shuttle'?'#7c3aed':'#d97706',weight:x[2]==='fly'?2:3,opacity:0.6,dashArray:x[2]==='fly'?'6 6':x[2]==='shuttle'?'4 4':null}).addTo(map);});
+})();
+document.querySelectorAll('nav a').forEach(a=>{a.addEventListener('click',function(){document.querySelectorAll('nav a').forEach(x=>x.classList.remove('active'));this.classList.add('active');});});
+var secs=document.querySelectorAll('section'),navs=document.querySelectorAll('nav a');
+var ob=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){navs.forEach(a=>a.classList.remove('active'));var m=document.querySelector('nav a[href="#'+en.target.id+'"]');if(m)m.classList.add('active');}});},{threshold:0.3});
+secs.forEach(s=>{if(s.id)ob.observe(s);});
+</script>
+
+</body>
+</html>
