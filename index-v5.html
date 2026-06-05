@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>欧洲旅行计划 v5 · 2026.6.30 - 7.26</title>
 <style>
-  :root { --bg:#f5f3ef; --card:#fff; --text:#2c2416; --muted:#6b5e4a; --accent:#b8860b; --accent2:#2e5c4e; --border:#e0d9cc; --highlight:#fdf6e3; }
+  :root { --bg:#f5f3ef; --card:#fff; --text:#2c2416; --muted:#6b5e4a; --accent:#b8860b; --accent2:#2e5c4e; --border:#e0d9cc; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
-  nav { position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); background:rgba(245,243,239,0.92); border-bottom:1px solid var(--border); padding:0 24px; display:flex; gap:20px; overflow-x:auto; }
-  nav a { text-decoration:none; color:var(--muted); font-size:14px; font-weight:500; padding:12px 4px; white-space:nowrap; border-bottom:2px solid transparent; }
+  nav { position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); background:rgba(245,243,239,0.92); border-bottom:1px solid var(--border); padding:0 24px; display:flex; gap:16px; overflow-x:auto; font-size:13px; }
+  nav a { text-decoration:none; color:var(--muted); font-weight:500; padding:12px 4px; white-space:nowrap; border-bottom:2px solid transparent; }
   nav a:hover, nav a.active { color:var(--accent); border-color:var(--accent); }
   .container { max-width:960px; margin:0 auto; padding:32px 20px 80px; }
   h1 { font-size:28px; font-weight:700; } h2 { font-size:20px; font-weight:700; margin-bottom:20px; color:var(--accent2); }
@@ -30,12 +30,13 @@
   .tag.food { background:#fce7f3; color:#be185d; }
   .tag.free { background:#dcfce7; color:#16a34a; }
   .tag.greece { background:#e0f2fe; color:#0369a1; }
+  .tag.swiss { background:#fce4ec; color:#c62828; }
   table { width:100%; border-collapse:collapse; font-size:14px; }
   th { text-align:left; font-size:12px; font-weight:600; color:var(--muted); padding:8px 12px; border-bottom:2px solid var(--border); }
-  td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
-  tr.subtotal td { font-weight:700; border-top:2px solid var(--accent); background:var(--highlight); }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); }
+  tr.subtotal td { font-weight:700; border-top:2px solid var(--accent); background:#fdf6e3; }
   .num { text-align:right; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
   .stat { text-align:center; padding:20px; }
   .stat .big { font-size:32px; font-weight:800; color:var(--accent2); }
   .stat .label { font-size:13px; color:var(--muted); margin-top:4px; }
@@ -43,33 +44,24 @@
   .route-node { padding:6px 14px; border-radius:8px; white-space:nowrap; background:var(--card); border:1px solid var(--border); }
   .route-arrow { color:var(--accent); font-size:18px; }
   .route-nights { font-size:11px; color:var(--muted); display:block; }
-  .tip { background:#fef9e7; border-left:3px solid var(--accent); padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
   .info { background:#f0fdf4; border-left:3px solid #16a34a; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
   .warn { background:#fff5f5; border-left:3px solid #dc2626; padding:16px 20px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px; }
-  .country-bar { display:flex; height:28px; border-radius:6px; overflow:hidden; margin-top:12px; font-size:12px; font-weight:600; }
-  .country-bar .es { background:#f4a460; color:#fff; display:flex; align-items:center; justify-content:center; }
-  .country-bar .it { background:#2e7d32; color:#fff; display:flex; align-items:center; justify-content:center; }
-  .country-bar .ch { background:#c62828; color:#fff; display:flex; align-items:center; justify-content:center; }
-  .country-bar .gr { background:#0369a1; color:#fff; display:flex; align-items:center; justify-content:center; }
-  .country-bar .no { background:#1e40af; color:#fff; display:flex; align-items:center; justify-content:center; }
   @media (max-width:640px) { .container { padding:20px 12px 60px; } h1 { font-size:22px; } .grid { grid-template-columns:repeat(2,1fr); } table { font-size:12px; } }
 </style>
 </head>
 <body>
-
 <nav>
   <a href="#overview">概览</a>
   <a href="#itinerary">每日行程</a>
   <a href="#budget">预算</a>
   <a href="#tips">贴士</a>
 </nav>
-
 <div class="container">
 
 <section id="overview">
   <h1>欧洲旅行计划 <span style="font-size:14px;color:var(--accent);">v5 希腊版</span></h1>
-  <p class="subtitle">2026.6.30 — 7.17（深圳18天）/ 7.26（其余27天）· BCN→罗马→佛罗伦萨→威尼斯→瑞士→扎金索斯→雅典→圣托里尼→挪威→斯京</p>
-  <p style="font-size:13px;color:var(--muted);">v5 变化：6/30晚到·BCN 3晚·希腊段：扎金索斯(飞机)+雅典(卫城)+圣托里尼(过夜慢船)·瑞士5晚保留·挪威4晚峡湾缩影</p>
+  <p class="subtitle">2026.6.30 — 7.16（深圳18天）/ 7.26（其余人27天）· BCN→罗马→佛路伦萨→威尼斯→瑞士（5晚全）→扎金索斯→雅典→圣托里尼→挪威→斯京</p>
+  <p style="font-size:13px;color:var(--muted);">v5 变化：6/30晚到·BCN 3晚·瑞士 5晚完整保留·7/15米兰分兵·希腊 5晚(扎岛+雅典+圣岛过夜船)·挪威4晚·斯京2晚</p>
 
   <div class="grid" style="margin-top:24px;">
     <div class="card stat"><div class="big">18天</div><div class="label">深圳出发 · ¥4.0万</div></div>
@@ -79,34 +71,10 @@
   </div>
 
   <div class="card">
-    <h3>路线</h3>
-    <div class="route-flow">
-      <div class="route-node">🇪🇸 BCN<span class="route-nights">3晚</span></div><span class="route-arrow">✈️</span>
-      <div class="route-node">🇮🇹 罗马<span class="route-nights">3晚</span></div><span class="route-arrow">🚄</span>
-      <div class="route-node">🇮🇹 佛路伦萨<span class="route-nights">3晚</span></div><span class="route-arrow">🚄</span>
-      <div class="route-node">🇮🇹 威尼斯<span class="route-nights">1晚</span></div><span class="route-arrow">🚄</span>
-      <div class="route-node">🇨🇭 瑞士<span class="route-nights">5晚</span></div><span class="route-arrow">✈️</span>
-      <div class="route-node">🇬🇷 扎岛<span class="route-nights">2晚</span></div><span class="route-arrow">🚌</span>
-      <div class="route-node">🏛️ 雅典<span class="route-nights">1晚</span></div><span class="route-arrow">🚢慢船</span>
-      <div class="route-node">🇬🇷 圣岛<span class="route-nights">1晚</span></div><span class="route-arrow">✈️</span>
-      <div class="route-node">🇳🇴 挪威<span class="route-nights">4晚</span></div><span class="route-arrow">✈️</span>
-      <div class="route-node">🇸🇪 斯京<span class="route-nights">2晚</span></div>
-    </div>
-  </div>
-
-  <div class="country-bar">
-    <div class="es" style="width:14%;">🇪🇸 3晚</div>
-    <div class="it" style="width:32%;">🇮🇹 7晚</div>
-    <div class="ch" style="width:23%;">🇨🇭 5晚</div>
-    <div class="gr" style="width:18%;">🇬🇷 4晚+1船</div>
-    <div class="no" style="width:13%;">🇳🇴4+🇸🇪2</div>
-  </div>
-
-  <div class="card" style="margin-top:16px;">
-    <h3>👥 关键分兵点</h3>
+    <h3>👥 分兵点：7/15 米兰 MXP</h3>
     <table>
-      <tr><td>7/16 米兰</td><td><strong>深圳1人</strong> ✈️ 米兰→回国（申根第17天）</td></tr>
-      <tr><td>7/16 米兰</td><td><strong>其余7人</strong> ✈️ 米兰→扎金索斯 → 雅典→圣托里尼→挪威→斯京 → 7/26 斯京→北京</td></tr>
+      <tr><td style="background:#fef9e7;"><strong>深圳 1人</strong></td><td style="background:#fef9e7;">下午 ✈️ MXP→北京→深圳（申根第16天·安全✅）</td></tr>
+      <tr><td><strong>其余 7人</strong></td><td>下午 ✈️ MXP→扎金索斯（easyJet 直飞·周三有航班✅）→ 希腊 → 挪威 → 斯京</td></tr>
     </table>
   </div>
 </section>
@@ -115,89 +83,90 @@
   <h2>每日行程</h2>
   <div class="tl">
 
-<!-- ===== BARCELONA ===== -->
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D1 · 6/30 周二 ✈️ 到达</div>
-      <div class="card"><h3>📍 巴塞罗那集合</h3><p>各队晚间到达 BCN。入住哥特区酒店。</p><div class="tags"><span class="tag">集合日</span></div></div></div>
+<!-- BCONA -->
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D1 · 6/30 周二 ✈️</div>
+      <div class="card"><h3>📍 巴塞罗那集合</h3><p>各队晚间到达 BCN。入住哥特区酒店。</p><div class="tags"><span class="tag">集合</span></div></div></div>
 
     <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D2 · 7/1 周三</div>
-      <div class="card"><h3>🥩 波盖利亚市场 → 🏥 圣保罗医院 → 🦎 桂尔公园 → ⛪ Montjuïc 日落</h3><p><strong>9:30：</strong>🥩 La Boqueria（果汁+火腿 €5-10·40min）。<strong>10:30：</strong>🚇→🏥 Sant Pau €15（多梅内克·UNESCO·1h）。<strong>12:30：</strong>午餐。<strong>14:00-16:00：</strong>🦎 Park Güell €10。<strong>18:00：</strong>⛪ Montjuïc 城堡 €5。🌇日落 21:38——提前 1h 到。</p><div class="tags"><span class="tag">🦎+⛪</span><span class="tag">🌇21:38</span></div></div></div>
+      <div class="card"><h3>🥩 波盖利亚市场 → 🏥 圣保罗医院 → 🦎 桂尔公园 → ⛪ Montjuïc 日落</h3><p>9:30 La Boqueria（果汁+火腿 €5-10）→10:30 Sant Pau €15（UNESCO·1h）→14:00 Park Güell €10→18:00 Montjuïc €5·🌇21:38。</p><div class="tags"><span class="tag">🦎+⛪</span><span class="tag">🌇21:38</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D3 · 7/2 周四 · 🎨 高迪日</div>
-      <div class="card"><h3>🏛️ 米拉之家 → 🏛️ 巴特略之家 → ⛪ 圣家堂（下午·导览）</h3><p><strong>9:15-10:20：</strong>米拉之家 €25。<strong>10:45-12:30：</strong>巴特略 €35。🍱 自带午餐。<strong>14:00-17:00：</strong>圣家堂 €26+导览 €4-6——下午西窗橙红光。傍晚哥特区晚餐。</p><div class="tags"><span class="tag highlight">⭐ 高迪</span><span class="tag">🎧 导览</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D3 · 7/2 周四 · 🎨</div>
+      <div class="card"><h3>🏛️ 米拉之家 → 巴特略之家 → ⛪ 圣家堂（下午导览）</h3><p>9:15 米拉 €25→10:45 巴特略 €35·🍱自带午餐→14:00 圣家堂 €26+导览 €4-6。下午西窗橙红光。</p><div class="tags"><span class="tag highlight">⭐ 高迪</span></div></div></div>
 
     <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D4 · 7/3 周五 · ✈️→罗马</div>
-      <div class="card"><h3>✈️ BCN→罗马（早班·中午到）→ 🎨 博尔盖塞 → 🚶 地标线</h3><p>早班 ✈️ 1.5h（€50），中午到罗马入住。<strong>14:00-16:00：</strong>博尔盖塞 €15（下午场·提前约！）。<strong>16:30-19:30：</strong>西班牙阶梯→许愿池→万神殿→纳沃纳。3km 平路南下。晚餐 Trastevere。</p><div class="tags"><span class="tag transport">✈️</span><span class="tag highlight">⭐ 贝尔尼尼</span></div></div></div>
+      <div class="card"><h3>✈️ BCN→罗马·中午到 → 🎨 博尔盖塞 → 🚶 地标线</h3><p>早班✈️1.5h·中午到。14:00 博尔盖塞 €15（下午场·提前约）。16:30 西班牙阶梯→许愿池→万神殿→纳沃纳。3km南下。</p><div class="tags"><span class="tag highlight">⭐ 贝尔尼尼</span></div></div></div>
 
-<!-- ===== ROME ===== -->
+<!-- ROME -->
     <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D5 · 7/4 周六 · 🇻🇦</div>
-      <div class="card"><h3>🇻🇦 梵蒂冈全天</h3><p>上午：梵蒂冈博物馆+西斯廷 €22。下午：圣彼得大教堂（免费）+穹顶 €10。进教堂遮肩膀膝盖。</p><div class="tags"><span class="tag highlight">⭐ 核心</span></div></div></div>
+      <div class="card"><h3>🇻🇦 梵蒂冈全天</h3><p>上午：梵蒂冈博物馆+西斯廷 €22。下午：圣彼得大教堂+穹顶 €10。</p><div class="tags"><span class="tag highlight">⭐ 核心</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D6 · 7/5 周日 🔥 免费日 → 🚄 佛罗伦萨</div>
-      <div class="card"><h3>🏛️ 斗兽场🆓 → 🗿 真理之口 → 🏛️ 卡比托利欧🆓 → 🚄19:20</h3><p>🔥 每月第一个周日国立博物馆免费！8:30 斗兽场+古罗马+帕拉蒂尼（⚠️15:00关）。12:15 真理之口。13:30 威尼斯广场。16:00-18:00 卡比托利欧。19:20🚄→佛罗伦萨 1.5h（€55），21:00到。</p><div class="tags"><span class="tag free">🔥 省€34</span><span class="tag transport">🚄</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D6 · 7/5 周日 🔥 → 🚄佛路伦萨</div>
+      <div class="card"><h3>🏛️ 斗兽场🆓→真理之口→卡比托利欧🆓→🚄19:20</h3><p>🔥免费日！8:30斗兽场+古罗马（⚠️15:00关）→12:15真理之口→13:30威尼斯广场→16:00卡比托利欧。19:20🚄→佛路伦萨 €55。</p><div class="tags"><span class="tag free">🔥省€34</span><span class="tag transport">🚄</span></div></div></div>
 
-<!-- ===== FLORENCE ===== -->
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D7 · 7/6 周一 · 🏛️ 佛路伦萨全天</div>
-      <div class="card"><h3>⛪ 大教堂 + 🏰 皮蒂宫 + 🌅 米开朗基罗日落</h3><p>昨晚已到。上午：圣母百花大教堂（周一开门✅·穹顶€30）→洗礼堂。下午：老桥→皮蒂宫 €16+波波丽。傍晚：米开朗基罗广场日落。🥩 T骨牛排 €35-40。</p><div class="tags"><span class="tag">🌅 日落</span><span class="tag food">🥩</span></div></div></div>
+<!-- FLORENCE -->
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D7 · 7/6 周一</div>
+      <div class="card"><h3>⛪ 大教堂+🏰皮蒂宫+🌅米开朗基罗日落</h3><p>昨晚已到。大教堂（周一✅·穹顶€30）→老桥→皮蒂宫€16+波波丽→🌅→🥩T骨€35-40。</p><div class="tags"><span class="tag">🌅</span><span class="tag food">🥩</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D8 · 7/7 周二 · 🎨 博物馆日</div>
-      <div class="card"><h3>🎨 乌菲兹 → 🏛️ 旧宫+领主广场 → 🗿 学院 → 美第奇</h3><p>8:30-11:30 乌菲兹 €25→12:00 路过领主广场+旧宫 €12.50→🍽️中央市场午餐→14:00 学院 €16（大卫）→16:00 美第奇 €10。备选砍巴杰罗。</p><div class="tags"><span class="tag highlight">⭐ 文艺复兴</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D8 · 7/7 周二 · 🎨</div>
+      <div class="card"><h3>🎨 乌菲兹→旧宫+领主广场→学院→美第奇</h3><p>8:30乌菲兹€25→12:00领主广场+旧宫€12.50→🍽️中央市场→14:00学院€16→16:00美第奇€10。</p><div class="tags"><span class="tag highlight">⭐ 文艺复兴</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D9 · 7/8 周三 → 🚄 威尼斯</div>
-      <div class="card"><h3>⛪ 圣马可修道院 → 🗿 巴杰罗（备选）→ 🚄 威尼斯</h3><p>9:00-10:00 圣马可修道院 €8（⚠️13:50关）。10:30-11:30 巴杰罗 €11（备选）。下午自由→16:00🚄→威尼斯Mestre 2h。</p><div class="tags"><span class="tag transport">移动日</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D9 · 7/8 周三 → 🚄威尼斯</div>
+      <div class="card"><h3>⛪ 圣马可修道院→🗿巴杰罗(备选)→🚄威尼斯</h3><p>9:00圣马可€8（⚠️13:50关）→10:30巴杰罗€11→下午自由→16:00🚄→Mestre 2h。</p><div class="tags"><span class="tag transport">移动日</span></div></div></div>
 
-<!-- ===== VENICE ===== -->
-    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D10 · 7/9 周四 · 🛶 威尼斯一日</div>
-      <div class="card"><h3>🛶 圣马可→总督宫→大运河→学院桥日落</h3><p>Mestre→主岛10min。上午：圣马可广场→大教堂（免费·金色马赛克）→总督宫 €25→叹息桥。下午：大运河Vaporetto→里亚托桥→小巷。🌅学院桥日落。<strong>傍晚：🚄威尼斯→米兰 2.5h，住米兰。👤第8人汇合！</strong></p><div class="tags"><span class="tag highlight">⭐ 水城</span><span class="tag join">👤8人</span></div></div></div>
+<!-- VENICE -->
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">D10 · 7/9 周四 · 🛶</div>
+      <div class="card"><h3>🛶 威尼斯一日 → 🚄米兰·👤第8人汇合</h3><p>圣马可广场→大教堂→总督宫€25→大运河→学院桥日落。傍晚🚄→米兰 2.5h。<strong>👤第8人汇合！</strong></p><div class="tags"><span class="tag highlight">⭐ 水城</span><span class="tag join">👤8人</span></div></div></div>
 
-<!-- ===== SWITZERLAND ===== -->
-    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D11 · 7/10 周五 · 🚗 瑞士 D1 · 分组日</div>
-      <div class="card"><h3>♨️ Rigi+Spa / 🥾 Stoos 山脊</h3><p>🚗米兰取车→卢塞恩 3h。入住 Weggis/Kriens（城外便宜）。分组：♨️ A车→Rigi CHF88 温泉。🥾 B车→Stoos CHF110 山脊。晚上碰头。</p><div class="tags"><span class="tag highlight">⭐ 瑞士D1</span><span class="tag">♨️+🥾</span></div></div></div>
+<!-- SWITZERLAND -->
+    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D11 · 7/10 周五 · 🇨🇭D1</div>
+      <div class="card"><h3>🚗 米兰取车→卢塞恩→龙疆S弯→龙疆湖→布里恩茨→劳特布龙嫩</h3><p>🚗3h到卢塞恩。入住 Weggis/Kriens（城外便宜+免费停车）。下午：龙疆S弯→湖边→布里恩茨湖畔→劳特布龙嫩瀑布 297m。晚上卢塞恩卡佩尔廊桥+老城。</p><div class="tags"><span class="tag swiss">🇨🇭</span><span class="tag transport">🚗</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D12 · 7/11 周六 · 🚗 瑞士 D2</div>
-      <div class="card"><h3>🚗 龙疆S弯→龙疆湖→布里恩茨→🪨First+Bachalpsee→🚗Täsch</h3><p>上午：龙疆 S 弯→湖边→布里恩茨。下午：梦幻山坡→First CHF64→Bachalpsee 2h→卡丁车 CHF21。傍晚🚗→Täsch 3.5h，为日照金山。</p><div class="tags"><span class="tag highlight">⭐ 精华日</span><span class="tag transport">🚗+🏎️</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D12 · 7/11 周六 · 🇨🇭D2 · 👥分组</div>
+      <div class="card"><h3>♨️ Rigi+Spa / 🥾 Stoos 山脊</h3><p>♨️A车→Rigi CHF88（齿轮火车+温泉）。🥾B车→Stoos CHF110（全球最陡火车+刀锋山脊2-3h）。⚠️买好周日+周一食材！</p><div class="tags"><span class="tag swiss">🇨🇭</span><span class="tag">♨️+🥾</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D13 · 7/12 周日 · 🌅 日照金山</div>
-      <div class="card"><h3>🌅 马特洪峰 + 🥾 Riffelsee 徒步</h3><p>5:30 起床→5:50 日出！7:00 Gornergrat CHF110→Rotenboden→Riffelsee 倒影→徒步 3km→Gornergrat 午餐→Zermatt→傍晚回因特拉肯。</p><div class="tags"><span class="tag highlight">🌅 日照金山</span><span class="tag rest">🥾</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D13 · 7/12 周日 · 🇨🇭D3</div>
+      <div class="card"><h3>🪨 First+Bachalpsee → 🚗 Täsch</h3><p>梦幻山坡→🚡First CHF64→Bachalpsee 2h→🏎️卡丁车 CHF21。傍晚🚗→Täsch 3.5h。🏨住 Täsch，为日照金山。</p><div class="tags"><span class="tag swiss">🇨🇭</span><span class="tag transport">🚗+🏎️</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D14 · 7/13 周一 · 🚗→米兰·👥分兵</div>
-      <div class="card"><h3>🚗 因特拉肯→米兰 3.5h → ✈️ 深圳人回国</h3><p>上午出发→中午到米兰。⛪大教堂+拱廊+告别午餐。<strong>傍晚：深圳1人 ✈️MXP→北京→深圳（Day 17✅）。</strong>其余7人米兰酒店，明天飞扎金索斯。</p><div class="tags"><span class="tag highlight">👥分流</span><span class="tag transport">✈️</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D14 · 7/13 周一 · 🇨🇭D4 · 🌅</div>
+      <div class="card"><h3>🌅 马特洪峰日照金山 + 🥾 Riffelsee 徒步</h3><p>5:30起床→5:50日出！7:00 Gornergrat CHF110→Rotenboden→Riffelsee倒影→徒步3km→Gornergrat午餐→Zermatt→🏨因特拉肯。</p><div class="tags"><span class="tag swiss">🇨🇭</span><span class="tag highlight">🌅</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D15 · 7/14 周二 · ✈️→扎金索斯</div>
-      <div class="card"><h3>✈️ 米兰 MXP→扎金索斯（easyJet 直飞 2h20m）→ 🚤 沉船湾</h3><p>easyJet MXP→ZTH 中午航班（€80-120·除周一外每天都有·7/14周二✅）。下午到扎金索斯→🚤沉船湾 Navagio Beach——悬崖俯拍+船到沙滩。🌅岛上日落+烤海鲜 €15-20。</p><div class="tags"><span class="tag highlight">⭐ 沉船湾</span><span class="tag greece">🇬🇷</span><span class="tag transport">✈️</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#c62828;"></div><div class="tl-date">D15 · 7/14 周二 · 🇨🇭D5 · 💎</div>
+      <div class="card"><h3>💎 厄希嫩湖 + 蓝湖</h3><p>Oeschinensee 缆车 CHF30（世界遗产高山湖）→蓝湖 CHF12（水晶鳟鱼湖）→施皮茨小镇。🏨住 Spiez/Brig（边境小镇·便宜+停车免费）。</p><div class="tags"><span class="tag swiss">🇨🇭</span><span class="tag rest">轻松</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D16 · 7/15 周三 · 🇬🇷 扎金索斯</div>
-      <div class="card"><h3>🔵 蓝洞 + 🏖️ Xigia 硫磺海滩</h3><p>上午🚤蓝洞 Blue Caves。下午 Xigia 硫磺海滩或自由。晚上岛上最后晚餐。</p><div class="tags"><span class="tag greece">🇬🇷</span><span class="tag rest">海岛</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#b8860b;"></div><div class="tl-date">D16 · 7/15 周三 · 🚗→米兰 · 👥分兵</div>
+      <div class="card"><h3>🚗 2.5h→米兰 MXP → 👥 全员分流</h3><p>8:00出发→11:30到。⛪大教堂+拱廊+告别午餐。<strong>深圳1人</strong>下午✈️MXP→北京→深圳（Day 16✅）。<strong>其余7人</strong>下午✈️MXP→ZTH（easyJet直飞·周三✅·€80-120）。傍晚到扎岛。</p><div class="tags"><span class="tag highlight">👥分流</span><span class="tag transport">✈️</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D17 · 7/16 周四 · 🚌→雅典</div>
-      <div class="card"><h3>🚌 KTEL 大巴+轮渡 → 雅典 4.5h（€25）</h3><p>扎金索斯→Kyllini 轮渡 1.5h→大巴直达雅典 3h。下午到雅典，入住。<strong>傍晚 Plaka 老城区晚餐+跳蚤市场。</strong></p><div class="tags"><span class="tag transport">🚌+⛴️</span><span class="tag greece">🇬🇷</span></div></div></div>
+<!-- GREECE -->
+    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D17 · 7/16 周四 · 🇬🇷 扎金索斯</div>
+      <div class="card"><h3>🚤 沉船湾 Navagio + 🔵 蓝洞</h3><p>上午🚤沉船湾——悬崖俯拍+船到沙滩。下午蓝洞。🦞岛上烤海鲜 €15-20。</p><div class="tags"><span class="tag highlight">⭐ 沉船湾</span><span class="tag greece">🇬🇷</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D18 · 7/17 周五 · 🏛️ 雅典</div>
-      <div class="card"><h3>🏛️ 卫城 Acropolis → 卫城博物馆 → 🚢 过夜慢船→圣托里尼</h3><p>上午：🏛️卫城 €20（帕特农·提前约！8:00开门·趁凉快）→卫城博物馆 €15。下午 Plaka 午餐。<strong>傍晚 Piraeus 港 🚢 Blue Star 慢船→圣托里尼</strong>（约8h·夜间航行·甲板看星空·€46）。</p><div class="tags"><span class="tag highlight">🏛️ 卫城</span><span class="tag transport">🚢过夜</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D18 · 7/17 周五 · 🚌→雅典</div>
+      <div class="card"><h3>🚌 KTEL 大巴+轮渡 → 雅典 4.5h（€25）</h3><p>扎岛→Kyllini 轮渡 1.5h→大巴 3h。下午到雅典·Plaka 晚餐+跳蚤市场。</p><div class="tags"><span class="tag transport">🚌+⛴️</span><span class="tag greece">🇬🇷</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D19 · 7/18 周六 · 🇬🇷 圣托里尼</div>
-      <div class="card"><h3>早晨船到 → 🏛️ Fira→Oia 悬崖步道 → 🌅 日落</h3><p>早晨船到 Athinios 港。Fira→Firostefani→Imerovigli 悬崖步道 2.5h（蓝顶教堂+火山口全景·免费）。下午 Oia 白房子蓝窗→<strong>城堡废墟日落</strong>——全球 Top3。</p><div class="tags"><span class="tag highlight">🌅 Oia</span><span class="tag greece">🇬🇷</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D19 · 7/18 周六 · 🏛️ 雅典 → 🚢 过夜慢船</div>
+      <div class="card"><h3>🏛️ 卫城 → 🚢 Blue Star→圣托里尼（过夜·€46）</h3><p>8:00卫城 €20（帕特农·趁凉快）→卫城博物馆 €15。傍晚 Piraeus 🚢 Blue Star 慢船 8h→圣岛。甲板看星空。</p><div class="tags"><span class="tag highlight">🏛️ 卫城</span><span class="tag transport">🚢过夜</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D20 · 7/19 周日 · ✈️→奥斯陆</div>
-      <div class="card"><h3>上午自由 → ✈️ 圣托里尼→雅典 45min → ✈️ 雅典→奥斯陆</h3><p>上午红沙滩或自由。中午✈️圣岛→雅典→傍晚✈️雅典→奥斯陆 4h（€120-180）。🏨奥斯陆入住。</p><div class="tags"><span class="tag transport">✈️</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D20 · 7/19 周日 · 🇬🇷 圣托里尼</div>
+      <div class="card"><h3>早晨船到 → Fira→Oia 悬崖步道 → 🌅 日落</h3><p>Fira→Firostefani→Imerovigli 2.5h（蓝顶教堂+火山口·免费）。下午 Oia→城堡废墟日落——全球 Top3。</p><div class="tags"><span class="tag highlight">🌅 Oia</span><span class="tag greece">🇬🇷</span></div></div></div>
 
-<!-- ===== NORWAY ===== -->
-    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D21 · 7/20 周一 · 🇳🇴 缩影 D1</div>
-      <div class="card"><h3>🚂 奥斯陆→米尔达→Flåmsbana→弗洛姆</h3><p>早班火车 5h→🚂高山火车 1h→弗洛姆入住。</p><div class="tags"><span class="tag highlight">⭐ 高山火车</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#0369a1;"></div><div class="tl-date">D21 · 7/20 周一 · ✈️→奥斯陆</div>
+      <div class="card"><h3>上午红沙滩 → ✈️ 圣岛→雅典→奥斯陆</h3><p>中午✈️圣岛→雅典→傍晚✈️→奥斯陆 4h（€120-180）。</p><div class="tags"><span class="tag transport">✈️</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D22 · 7/21 周二 · 🇳🇴 缩影 D2</div>
-      <div class="card"><h3>🚢 松恩峡湾→卑尔根</h3><p>弗洛姆🚢2h 纳柔依峡湾→居德旺恩🚌1h→沃斯🚂1.5h→卑尔根。</p><div class="tags"><span class="tag highlight">⭐ 峡湾</span></div></div></div>
+<!-- NORWAY -->
+    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D22 · 7/21 周二 · 🇳🇴 缩影D1</div>
+      <div class="card"><h3>🚂 奥斯陆→Flåmsbana→弗洛姆</h3><p>早班火车 5h→🚂高山火车 1h→弗洛姆。</p><div class="tags"><span class="tag highlight">⭐ 高山火车</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D23 · 7/22 周三 · 🇳🇴</div>
-      <div class="card"><h3>🏙️ 卑尔根全天</h3><p>弗洛伊恩山缆车→布吕根→鱼市。卑尔根年均 270 天雨——雨中更有味道。</p><div class="tags"><span class="tag rest">慢游</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D23 · 7/22 周三 · 🇳🇴 缩影D2</div>
+      <div class="card"><h3>🚢 松恩峡湾→卑尔根</h3><p>弗洛姆🚢2h→居德旺恩🚌1h→沃斯🚂1.5h→卑尔根。</p><div class="tags"><span class="tag highlight">⭐ 峡湾</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D24 · 7/23 周四 · ✈️→斯京</div>
-      <div class="card"><h3>卑尔根→✈️斯德哥尔摩 1.5h</h3><p>瑞典3人回家🏠。4人入住斯京酒店，傍晚老城散步。</p><div class="tags"><span class="tag transport">✈️</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D24 · 7/23 周四 · 🇳🇴 卑尔根→✈️斯京</div>
+      <div class="card"><h3>卑尔根上午 → ✈️ 斯德哥尔摩 1.5h</h3><p>弗洛伊恩山→布吕根→鱼市。下午✈️→斯京。瑞典3人回家🏠。</p><div class="tags"><span class="tag transport">✈️</span></div></div></div>
 
-    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D25 · 7/24 周五 · 🇸🇪</div>
-      <div class="card"><h3>🏙️ 斯德哥尔摩慢游</h3><p>老城 Gamla Stan→王宫→瓦萨沉船博物馆→Södermalm→Fika。瑞典3人当导游。</p><div class="tags"><span class="tag rest">慢游</span></div></div></div>
+    <div class="tl-item"><div class="tl-dot" style="background:#1e40af;"></div><div class="tl-date">D25 · 7/24 周五 · 🇸🇪 斯德哥尔摩</div>
+      <div class="card"><h3>🏙️ 老城+瓦萨博物馆+Fika</h3><p>Gamla Stan→王宫→瓦萨沉船博物馆→Södermalm→Fika。瑞典3人当导游。</p><div class="tags"><span class="tag rest">慢游</span></div></div></div>
 
     <div class="tl-item"><div class="tl-dot" style="background:#b8860b;"></div><div class="tl-date">D26 · 7/25 周六 · ✈️ 回国</div>
-      <div class="card"><h3>🇨🇳 哈尔滨/上海 4人 ✈️ 斯京→北京</h3><p>4人国航直飞 ~8h（¥3,500-5,000）。7/26到京，各自回家。</p><div class="tags"><span class="tag transport">✈️回国</span></div></div></div>
+      <div class="card"><h3>🇨🇳 哈尔滨/上海 4人 ✈️ 斯京→北京</h3><p>国航直飞 ~8h（¥3,500-5,000）。7/26到京。</p><div class="tags"><span class="tag transport">✈️</span></div></div></div>
 
   </div>
 </section>
